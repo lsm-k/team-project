@@ -1,0 +1,18 @@
+[project]
+name = "team-project"
+version = "0.1.0"
+description = "simple team project"
+readme = "README.md"
+requires-python = "==3.9.13"
+dependencies = [
+    "click==8.1.8",
+    "colorama==0.4.6",
+    "pyqt6==6.4.2",
+    "pyqt6-plugins==6.4.2.2.3",
+    "pyqt6-qt6==6.4.3",
+    "pyqt6-sip==13.10.0",
+    "pyqt6-tools==6.4.2.3.3",
+    "python-dotenv==1.1.0",
+    "qt6-applications==6.4.3.2.3",
+    "qt6-tools==6.4.3.1.3",
+]
