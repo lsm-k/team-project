@@ -14,43 +14,36 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="test1">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>50</y>
-      <width>75</width>
-      <height>24</height>
+      <x>0</x>
+      <y>0</y>
+      <width>51</width>
+      <height>201</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    </property>
     <property name="text">
-     <string>test1</string>
+     <string>SAMPLE</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="test">
+   <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>150</y>
-      <width>75</width>
-      <height>24</height>
+      <x>0</x>
+      <y>200</y>
+      <width>51</width>
+      <height>201</height>
      </rect>
     </property>
-    <property name="text">
-     <string>test2</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="test2">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>180</y>
-      <width>75</width>
-      <height>24</height>
-     </rect>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
     </property>
     <property name="text">
-     <string>test3</string>
+     <string>SAMPLE</string>
     </property>
    </widget>
   </widget>
