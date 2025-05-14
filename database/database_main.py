@@ -11,7 +11,8 @@ curser.execute("""
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         Food_name TEXT NOT NULL,
         Amount INTEGER NOT NULL,
-        Expiration_date TEXT NOT NULL
+        Expiration_date TEXT NOT NULL,
+        Food_type TEXT NOT NULL
     )
 """)
 
