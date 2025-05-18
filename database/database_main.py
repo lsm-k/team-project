@@ -6,11 +6,6 @@ connection = sql.connect(db_path)
 curser = connection.cursor()
 
 class Database:
-    def commit(self):
-        #변경사항 저장
-        connection.commit()
-        connection.close()
-
     def setting_table():
         #테이블 생성
         curser.execute("""
@@ -22,47 +17,48 @@ class Database:
                 Food_type TEXT NOT NULL
             )
         """)
-        Database.commit()
+        connection.commit()
     
     def data_insert(Food_name, Amount, Expiration_date, Food_type):
         # 데이터 삽입
-        curser.execute(f"""
+        curser.execute("""
             INSERT INTO Ref(Food_name, Amount, Expiration_date, Food_type)
-            VALUES('{Food_name}', {Amount} , '{Expiration_date}', '{Food_type}'),
-        """)
-        Database.commit()
+            VALUES(?, ?, ?, ?)
+        """, (Food_name, Amount, Expiration_date, Food_type))
+        connection.commit()
     
+    @staticmethod
     def data_delete(Food_name):
         #데이터 삭제
-        curser.execute(f"""
-            DELETE FROM Ref WHERE Food_name = '{Food_name}'
-        """)
-        Database.commit()
+        curser.execute("""
+            DELETE FROM Ref WHERE Food_name = ?
+        """, (Food_name,))
+        connection.commit()
     
     def data_edit_name(Food_name, New_Food_name):
         # 식품 이름 데이터 수정 
-        curser.execute(f"""
-            UPDATE Ref SET Food_name = '{New_Food_name}' WHERE Food_name = '{Food_name}'
-        """)
-        Database.commit()
+        curser.execute("""
+            UPDATE Ref SET Food_name = ? WHERE Food_name = ?
+        """, (New_Food_name, Food_name))
+        connection.commit()
     
-    def data_edit_amount(Food_name, Amount):
+    def data_edit_amount(self, Food_name, Amount):
         # 수량 데이터 수정
-        curser.execute(f"""
-            UPDATE Ref SET Amount = {Amount} WHERE Food_name = '{Food_name}'
-        """)
-        Database.commit()
+        curser.execute("""
+            UPDATE Ref SET Amount = ? WHERE Food_name = ?
+        """, (Amount, Food_name))
+        connection.commit()
     
     def data_edit_expiration(Food_name, Expiration_date):
         # 유통기한한 데이터 수정
-        curser.execute(f"""
-            UPDATE Ref SET Expiration_date = '{Expiration_date}' WHERE Food_name = '{Food_name}'
-        """)
-        Database.commit()
+        curser.execute("""
+            UPDATE Ref SET Expiration_date = ? WHERE Food_name = ?
+        """, (Expiration_date, Food_name))
+        connection.commit()
     
     def data_edit_type(Food_name, Food_type):
         # 카테고리 데이터 수정
-        curser.execute(f"""
-            UPDATE Ref SET Food_type = '{Food_type}' WHERE Food_name = '{Food_name}'
-        """)
-        Database.commit()
+        curser.execute("""
+            UPDATE Ref SET Food_type = ? WHERE Food_name = ?
+        """, (Food_type, Food_name))
+        connection.commit()
