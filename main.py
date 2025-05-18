@@ -5,7 +5,5 @@ from database import database_main as d_m
 # main_window.mainrun()
 
 d_main = d_m.Database()
-# d_main.setting_table()
-# d_main.data_edit_type("사과", "과일")
 
-d_main.data_edit_type('사과', '과일')
+d_main.setting_table()
