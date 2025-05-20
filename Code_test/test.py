@@ -17,7 +17,7 @@ curser.execute("""
 # 테이블 목록 출력
 curser.execute("SELECT name FROM sqlite_master WHERE type='table';")
 tables = curser.fetchall()
-print("생성된 테이블", tables)
+print("생성된 테이블", tables)  
 
 connection.commit()
 connection.close()

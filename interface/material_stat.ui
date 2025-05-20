@@ -114,33 +114,36 @@ border-color: rgba(255, 255, 255, 0);
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
+   <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
       <x>80</x>
       <y>0</y>
-      <width>501</width>
-      <height>304</height>
+      <width>511</width>
+      <height>801</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="1">
-      <widget class="QTextEdit" name="textEdit_6"/>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QWidget" name="widget_3" native="true">
+       <property name="acceptDrops">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QTextEdit" name="textEdit_2"/>
+     <item>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="acceptDrops">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QTextEdit" name="textEdit_4"/>
-     </item>
-     <item row="3" column="0">
-      <widget class="QTextEdit" name="textEdit_5"/>
-     </item>
-     <item row="0" column="0">
-      <widget class="QTextEdit" name="textEdit"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QTextEdit" name="textEdit_3"/>
+     <item>
+      <widget class="QWidget" name="widget_2" native="true">
+       <property name="acceptDrops">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
