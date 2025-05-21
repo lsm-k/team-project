@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import os
 
-db_path = os.path.join(os.path.dirname(__file__), "team_project_db.db")
+db_path = os.path.join(os.path.dirname(__file__), "db.sqlite3")
 connection = sql.connect(db_path)
 cursor = connection.cursor()
 
