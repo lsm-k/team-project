@@ -8,7 +8,6 @@ cursor = connection.cursor()
 class Database:
     def setting_table(self):
         # 테이블 생성
-        print("test")
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS Ref (
