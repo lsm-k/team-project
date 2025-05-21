@@ -128,18 +128,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pyside6-verticalqtabwidget"
-version = "0.0.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pyside6" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/36/66/bf3e5b5f7ad8fa08ffe34a9661af50856a0f33219d56c4c60e4d21fbfb17/PySide6_VerticalQTabWidget-0.0.3.tar.gz", hash = "sha256:3e005b80bfa1e79f6cf572c46e8fef9d4d717f0587c74e5c4a5e0885407c4d5f", size = 3105, upload-time = "2023-12-05T18:07:40.454Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6e/76/39ce41a800319c2ff48182e4ba00bec2e7e1bbadb7c4b867689e67ff29e3/PySide6_VerticalQTabWidget-0.0.3-py3-none-any.whl", hash = "sha256:41ce0edb33696bf6390a096674f237a1bbe02e0393b7712de21410cb13b54184", size = 3666, upload-time = "2023-12-05T18:07:38.038Z" },
-]
-
-[[package]]
 name = "shiboken6"
 version = "6.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -158,12 +146,10 @@ source = { virtual = "." }
 dependencies = [
     { name = "black" },
     { name = "pyside6" },
-    { name = "pyside6-verticalqtabwidget" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "pyside6", specifier = "==6.9.0" },
-    { name = "pyside6-verticalqtabwidget", specifier = ">=0.0.3" },
 ]
