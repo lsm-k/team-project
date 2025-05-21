@@ -1,5 +1,6 @@
 from interface import interface_main as i_m
 <<<<<<< HEAD
+<<<<<<< HEAD
 from database.cold_storage import db as cs_db
 
 # d_main = d_m.Database()
@@ -15,6 +16,13 @@ from database import database_main as d_m
 # main_window.mainrun()
 >>>>>>> parent of 261cda4 (change to pyside6 and migrate previous changes)
 
+=======
+from database import database_main as d_m
+
+# main_window = i_m.Mainwindow()
+# main_window.mainrun()
+
+>>>>>>> parent of 261cda4 (change to pyside6 and migrate previous changes)
 d_main = d_m.Database()
 
 d_main.setting_table()
