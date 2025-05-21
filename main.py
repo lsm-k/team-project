@@ -1,5 +1,5 @@
 from interface import interface_main as i_m
-from database import database_main as d_m
+from database.cold_storage import db as cs_db
 
 # d_main = d_m.Database()
 
