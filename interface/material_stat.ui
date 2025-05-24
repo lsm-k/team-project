@@ -23,12 +23,12 @@
       <height>811</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="side_v_layout">
      <property name="spacing">
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="storage_status_btn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -48,7 +48,7 @@ border-color: rgba(255, 255, 255, 0);</string>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="recipe_btn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -67,7 +67,7 @@ border-color: rgba(255, 255, 255, 0);</string>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="recommend_btn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -88,7 +88,7 @@ border-color: rgba(255, 255, 255, 0);</string>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="setting_btn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -123,26 +123,96 @@ border-color: rgba(255, 255, 255, 0);
       <height>801</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <layout class="QVBoxLayout" name="main_v_layout">
      <item>
-      <widget class="QWidget" name="widget_3" native="true">
-       <property name="acceptDrops">
-        <bool>true</bool>
+      <widget class="QTabWidget" name="tab_root">
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="widget" native="true">
-       <property name="acceptDrops">
-        <bool>true</bool>
+       <property name="tabBarAutoHide">
+        <bool>false</bool>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="widget_2" native="true">
-       <property name="acceptDrops">
-        <bool>true</bool>
-       </property>
+       <widget class="QWidget" name="storage_tab">
+        <attribute name="title">
+         <string>재료</string>
+        </attribute>
+        <widget class="QLineEdit" name="lineEdit">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>110</y>
+           <width>113</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="placeholderText">
+          <string>ㅁㅇㄴㅁㅇ</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="recipe_tab">
+        <attribute name="title">
+         <string>레시피</string>
+        </attribute>
+        <widget class="QLineEdit" name="lineEdit_2">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>120</y>
+           <width>113</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>ㄴㅁㅇㄴㅁ</string>
+         </property>
+         <property name="placeholderText">
+          <string>ㅁㅇㄴㅁㅇ</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="recommend_tab">
+        <attribute name="title">
+         <string>추천</string>
+        </attribute>
+        <widget class="QLineEdit" name="lineEdit_3">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>110</y>
+           <width>113</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>ㅊㅊㅋㅊㅌ</string>
+         </property>
+         <property name="placeholderText">
+          <string>ㅁㅇㄴㅁㅇ</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="setting_tab">
+        <attribute name="title">
+         <string>설정</string>
+        </attribute>
+        <widget class="QLineEdit" name="lineEdit_4">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>100</y>
+           <width>113</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>유융뉴ㅠ</string>
+         </property>
+         <property name="placeholderText">
+          <string>ㅁㅇㄴㅁㅇ</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
      </item>
     </layout>

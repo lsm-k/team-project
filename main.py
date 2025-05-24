@@ -5,4 +5,4 @@ cold_storage = cs_db.Database()
 cold_storage.setting_table()
 
 main_window = ui_root.Mainwindow()
-main_window.mainrun()
+main_window.show()
