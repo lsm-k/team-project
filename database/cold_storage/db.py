@@ -5,6 +5,7 @@ db_path = os.path.join(os.path.dirname(__file__), "db.sqlite3")
 connection = sql.connect(db_path)
 cursor = connection.cursor()
 
+
 class Database:
     def setting_table(self):
         # 테이블 생성
