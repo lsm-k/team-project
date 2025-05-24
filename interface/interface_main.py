@@ -2,8 +2,8 @@ import sys
 import os
 from PySide6.QtWidgets import QApplication, QTextBrowser, QWidget, QGridLayout
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile, Qt, QMimeData
-from PySide6.QtGui import QDrag
+from PySide6.QtCore import QFile, Qt, QMimeData, QByteArray, QDataStream, QIODevice
+from PySide6.QtGui import QDrag, QPixmap, QPainter
 
 from enum import Enum
 
@@ -31,41 +31,58 @@ class DraggableTextBrowser(QTextBrowser):
             event.buttons() & Qt.LeftButton
             and self._drag_start_pos is not None
             and (event.pos() - self._drag_start_pos).manhattanLength() > QApplication.startDragDistance()
-            and self.toPlainText()
         ):
             drag = QDrag(self)
             mime_data = QMimeData()
-            mime_data.setText(self.toPlainText())
             if not self.objectName():
                 self.setObjectName(f"DraggableTextBrowser_{id(self)}")
             mime_data.setData("application/x-qwidget-objectname", self.objectName().encode())
+            pixmap = self.grab()
+            drag.setPixmap(pixmap)
+            drag.setHotSpot(event.pos())
             drag.setMimeData(mime_data)
             drag.exec(Qt.MoveAction)
         else:
             super().mouseMoveEvent(event)
 
     def dragEnterEvent(self, event):
-        if event.mimeData().hasText():
+        if event.mimeData().hasFormat("application/x-qwidget-objectname"):
             event.acceptProposedAction()
         else:
             event.ignore()
 
     def dragMoveEvent(self, event):
-        if event.mimeData().hasText():
+        if event.mimeData().hasFormat("application/x-qwidget-objectname"):
             event.acceptProposedAction()
         else:
             event.ignore()
 
     def dropEvent(self, event):
-        if event.mimeData().hasText():
+        if event.mimeData().hasFormat("application/x-qwidget-objectname"):
             src_object_name = event.mimeData().data("application/x-qwidget-objectname").data().decode()
             src_widget = self.parent().findChild(QTextBrowser, src_object_name)
             if src_widget and src_widget is not self:
-                src_text = src_widget.toPlainText()
-                dst_text = self.toPlainText()
-                src_widget.setPlainText(dst_text)
-                self.setPlainText(src_text)
-            event.acceptProposedAction()
+                parent_layout = self.parent().layout()
+                if isinstance(parent_layout, QGridLayout):
+                    pos_self = None
+                    pos_src = None
+                    for row in range(parent_layout.rowCount()):
+                        for col in range(parent_layout.columnCount()):
+                            item = parent_layout.itemAtPosition(row, col)
+                            if item and item.widget() is self:
+                                pos_self = (row, col)
+                            if item and item.widget() is src_widget:
+                                pos_src = (row, col)
+                    if pos_self and pos_src:
+                        parent_layout.removeWidget(self)
+                        parent_layout.removeWidget(src_widget)
+                        self.setParent(None)
+                        src_widget.setParent(None)
+                        parent_layout.addWidget(self, *pos_src)
+                        parent_layout.addWidget(src_widget, *pos_self)
+                event.acceptProposedAction()
+            else:
+                event.ignore()
         else:
             event.ignore()
 
@@ -76,13 +93,10 @@ class Mainwindow:
     def load_ui(self):
         ui_file = QFile(os.path.join(os.path.dirname(__file__), "material_stat.ui"))
         ui_file.open(QFile.ReadOnly)
-
         loader = QUiLoader()
         window = loader.load(ui_file)
         ui_file.close()
-
         self.window = window
-
         for widget in self.window.findChildren(QWidget):
             if widget.objectName().startswith("widget_"):
                 layout = widget.layout()
@@ -119,14 +133,11 @@ class Mainwindow:
 
     def show(self):
         app = QApplication(sys.argv)
-
         self.load_ui()
         self.setting_events()
         self.display_none_all_tabs()
         self.window.tab_root.setCurrentIndex(TabKind.STORAGE_STATUS.value)
-
         self.window.show()
-
         sys.exit(app.exec())
 
     def change_tab(self, tab_kind):
