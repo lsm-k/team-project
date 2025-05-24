@@ -1,8 +1,9 @@
 import sys
 import os
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QTextBrowser, QWidget, QGridLayout
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile
+from PySide6.QtCore import QFile, Qt, QMimeData
+from PySide6.QtGui import QDrag
 
 from enum import Enum
 
@@ -12,6 +13,61 @@ class TabKind(Enum):
     RECIPE = 1
     RECOMMEND = 2
     SETTING = 3
+
+
+class DraggableTextBrowser(QTextBrowser):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setAcceptDrops(True)
+        self._drag_start_pos = None
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._drag_start_pos = event.pos()
+        super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        if (
+            event.buttons() & Qt.LeftButton
+            and self._drag_start_pos is not None
+            and (event.pos() - self._drag_start_pos).manhattanLength() > QApplication.startDragDistance()
+            and self.toPlainText()
+        ):
+            drag = QDrag(self)
+            mime_data = QMimeData()
+            mime_data.setText(self.toPlainText())
+            if not self.objectName():
+                self.setObjectName(f"DraggableTextBrowser_{id(self)}")
+            mime_data.setData("application/x-qwidget-objectname", self.objectName().encode())
+            drag.setMimeData(mime_data)
+            drag.exec(Qt.MoveAction)
+        else:
+            super().mouseMoveEvent(event)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasText():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasText():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasText():
+            src_object_name = event.mimeData().data("application/x-qwidget-objectname").data().decode()
+            src_widget = self.parent().findChild(QTextBrowser, src_object_name)
+            if src_widget and src_widget is not self:
+                src_text = src_widget.toPlainText()
+                dst_text = self.toPlainText()
+                src_widget.setPlainText(dst_text)
+                self.setPlainText(src_text)
+            event.acceptProposedAction()
+        else:
+            event.ignore()
 
 
 class Mainwindow:
@@ -26,6 +82,23 @@ class Mainwindow:
         ui_file.close()
 
         self.window = window
+
+        for widget in self.window.findChildren(QWidget):
+            if widget.objectName().startswith("widget_"):
+                layout = widget.layout()
+                if isinstance(layout, QGridLayout):
+                    for row in range(layout.rowCount()):
+                        for col in range(layout.columnCount()):
+                            item = layout.itemAtPosition(row, col)
+                            if item:
+                                child = item.widget()
+                                if isinstance(child, QTextBrowser) and not isinstance(child, DraggableTextBrowser):
+                                    text = child.toPlainText()
+                                    layout.removeWidget(child)
+                                    child.deleteLater()
+                                    new_tb = DraggableTextBrowser()
+                                    new_tb.setPlainText(text)
+                                    layout.addWidget(new_tb, row, col)
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
