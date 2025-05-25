@@ -1,0 +1,93 @@
+[PySide6 주요 위젯 및 클래스 정리]
+
+■ QApplication
+- 모든 Qt 애플리케이션의 시작점
+- 예시: app = QApplication(sys.argv)
+
+■ QWidget
+- 모든 위젯의 기본 클래스
+- show(), hide(), setWindowTitle() 등 사용
+
+■ QMainWindow
+- 메뉴, 툴바, 상태바 등 메인 윈도우 구조 제공
+
+■ QPushButton
+- 버튼 위젯
+- clicked.connect(함수)로 이벤트 연결
+
+■ QLabel
+- 텍스트, 이미지 표시용 위젯
+- setText(), setPixmap() 등
+
+■ QTextBrowser
+- 리치 텍스트, HTML, 링크 등 표시
+- setPlainText(), setHtml(), toPlainText()
+
+■ QLineEdit
+- 한 줄 입력 필드
+- setText(), text(), setPlaceholderText()
+
+■ QGridLayout, QVBoxLayout, QHBoxLayout
+- 위젯 배치용 레이아웃
+- addWidget(위젯, row, col) 등
+
+■ QDrag, QMimeData
+- 드래그 앤 드롭 구현에 사용
+- QDrag.setMimeData(), QDrag.setPixmap()
+
+■ QFile, QUiLoader
+- .ui 파일 로드 및 파일 입출력
+
+■ 시그널/슬롯
+- 버튼 클릭 등 이벤트 처리
+- 예시: button.clicked.connect(함수)
+
+[자주 쓰는 코드 예시]
+
+# 버튼 클릭 이벤트 연결
+button.clicked.connect(self.on_button_clicked)
+
+# 텍스트박스에 텍스트 설정/가져오기
+textbox.setPlainText("내용")
+text = textbox.toPlainText()
+
+# 레이아웃에 위젯 추가
+layout.addWidget(widget, row, col)
+
+# 드래그 앤 드롭
+drag = QDrag(self)
+mime_data = QMimeData()
+mime_data.setText("데이터")
+drag.setMimeData(mime_data)
+drag.exec(Qt.MoveAction)
+
+# .ui 파일 로드 및 연결 (상세 설명)
+from PySide6.QtCore import QFile
+from PySide6.QtUiTools import QUiLoader
+
+# 1. QFile로 ui 파일 열기
+file = QFile("my.ui")
+file.open(QFile.ReadOnly)
+
+# 2. QUiLoader로 ui 파일 로드
+loader = QUiLoader()
+window = loader.load(file)
+file.close()
+
+# 3. window는 QWidget 객체이므로, findChild로 내부 위젯 접근 가능
+button = window.findChild(QPushButton, "pushButton")
+label = window.findChild(QLabel, "label_1")
+
+# 4. 시그널 연결 등 코드로 조작
+button.clicked.connect(lambda: label.setText("버튼 클릭됨"))
+
+# 5. 창 띄우기
+window.show()
+
+# 6. QApplication 실행
+import sys
+app = QApplication(sys.argv)
+sys.exit(app.exec())
+
+[공식 문서]
+https://doc.qt.io/qtforpython-6/

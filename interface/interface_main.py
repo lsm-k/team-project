@@ -96,7 +96,9 @@ class Mainwindow:
         loader = QUiLoader()
         window = loader.load(ui_file)
         ui_file.close()
+
         self.window = window
+        
         for widget in self.window.findChildren(QWidget):
             if widget.objectName().startswith("widget_"):
                 layout = widget.layout()
