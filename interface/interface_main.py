@@ -60,31 +60,44 @@ class DraggableTextBrowser(QTextBrowser):
     def dropEvent(self, event):
         if event.mimeData().hasFormat("application/x-qwidget-objectname"):
             src_object_name = event.mimeData().data("application/x-qwidget-objectname").data().decode()
-            src_widget = self.parent().findChild(QTextBrowser, src_object_name)
-            if src_widget and src_widget is not self:
-                parent_layout = self.parent().layout()
-                if isinstance(parent_layout, QGridLayout):
-                    pos_self = None
-                    pos_src = None
-                    for row in range(parent_layout.rowCount()):
-                        for col in range(parent_layout.columnCount()):
-                            item = parent_layout.itemAtPosition(row, col)
-                            if item and item.widget() is self:
-                                pos_self = (row, col)
-                            if item and item.widget() is src_widget:
-                                pos_src = (row, col)
-                    if pos_self and pos_src:
-                        parent_layout.removeWidget(self)
-                        parent_layout.removeWidget(src_widget)
-                        self.setParent(None)
-                        src_widget.setParent(None)
-                        parent_layout.addWidget(self, *pos_src)
-                        parent_layout.addWidget(src_widget, *pos_self)
-                event.acceptProposedAction()
+            scroll_area = self._find_scroll_area()
+            if scroll_area:
+                contents = scroll_area.widget()
+                src_widget = contents.findChild(QTextBrowser, src_object_name)
+                if src_widget and src_widget is not self:
+                    parent_layout = contents.layout()
+                    if isinstance(parent_layout, QGridLayout):
+                        pos_self = None
+                        pos_src = None
+                        for row in range(parent_layout.rowCount()):
+                            for col in range(parent_layout.columnCount()):
+                                item = parent_layout.itemAtPosition(row, col)
+                                if item and item.widget() is self:
+                                    pos_self = (row, col)
+                                if item and item.widget() is src_widget:
+                                    pos_src = (row, col)
+                        if pos_self and pos_src:
+                            parent_layout.removeWidget(self)
+                            parent_layout.removeWidget(src_widget)
+                            self.setParent(None)
+                            src_widget.setParent(None)
+                            parent_layout.addWidget(self, *pos_src)
+                            parent_layout.addWidget(src_widget, *pos_self)
+                    event.acceptProposedAction()
+                else:
+                    event.ignore()
             else:
                 event.ignore()
         else:
             event.ignore()
+
+    def _find_scroll_area(self):
+        parent = self.parent()
+        while parent:
+            if parent.metaObject().className() == "QScrollArea":
+                return parent
+            parent = parent.parent()
+        return None
 
 
 class Mainwindow:
