@@ -22,7 +22,8 @@ class Database:
         )
         connection.commit()
 
-    def data_insert(self, Food_name, Amount, Expiration_date, Food_type):
+    @classmethod
+    def data_insert(cls, Food_name, Amount, Expiration_date, Food_type):
         # 데이터 삽입
         cursor.execute(
             """
