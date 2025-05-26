@@ -30,13 +30,16 @@ class DraggableTextBrowser(QTextBrowser):
         if (
             event.buttons() & Qt.LeftButton
             and self._drag_start_pos is not None
-            and (event.pos() - self._drag_start_pos).manhattanLength() > QApplication.startDragDistance()
+            and (event.pos() - self._drag_start_pos).manhattanLength()
+            > QApplication.startDragDistance()
         ):
             drag = QDrag(self)
             mime_data = QMimeData()
             if not self.objectName():
                 self.setObjectName(f"DraggableTextBrowser_{id(self)}")
-            mime_data.setData("application/x-qwidget-objectname", self.objectName().encode())
+            mime_data.setData(
+                "application/x-qwidget-objectname", self.objectName().encode()
+            )
             pixmap = self.grab()
             drag.setPixmap(pixmap)
             drag.setHotSpot(event.pos())
@@ -59,7 +62,12 @@ class DraggableTextBrowser(QTextBrowser):
 
     def dropEvent(self, event):
         if event.mimeData().hasFormat("application/x-qwidget-objectname"):
-            src_object_name = event.mimeData().data("application/x-qwidget-objectname").data().decode()
+            src_object_name = (
+                event.mimeData()
+                .data("application/x-qwidget-objectname")
+                .data()
+                .decode()
+            )
             scroll_area = self._find_scroll_area()
             if scroll_area:
                 contents = scroll_area.widget()
@@ -111,7 +119,7 @@ class Mainwindow:
         ui_file.close()
 
         self.window = window
-        
+
         for widget in self.window.findChildren(QWidget):
             if widget.objectName().startswith("widget_"):
                 layout = widget.layout()
@@ -121,7 +129,9 @@ class Mainwindow:
                             item = layout.itemAtPosition(row, col)
                             if item:
                                 child = item.widget()
-                                if isinstance(child, QTextBrowser) and not isinstance(child, DraggableTextBrowser):
+                                if isinstance(child, QTextBrowser) and not isinstance(
+                                    child, DraggableTextBrowser
+                                ):
                                     text = child.toPlainText()
                                     layout.removeWidget(child)
                                     child.deleteLater()

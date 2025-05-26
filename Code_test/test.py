@@ -18,8 +18,10 @@ class IndicSelectWindow(QWidget):
 
         for i in range(4):
             for j in range(4):
-                self.label_test = QLabel(f'Label_{i+1}-{j+1}')
-                self.label_test.setStyleSheet('background-color: black; color: white; font: 26pt')
+                self.label_test = QLabel(f"Label_{i+1}-{j+1}")
+                self.label_test.setStyleSheet(
+                    "background-color: black; color: white; font: 26pt"
+                )
 
                 Box = QVBoxLayout()
                 Box.addWidget(self.label_test)
@@ -71,7 +73,9 @@ class IndicSelectWindow(QWidget):
                 return
 
             i, j = max(self.target, source), min(self.target, source)
-            p1, p2 = self.gridLayout.getItemPosition(i), self.gridLayout.getItemPosition(j)
+            p1, p2 = self.gridLayout.getItemPosition(
+                i
+            ), self.gridLayout.getItemPosition(j)
 
             self.gridLayout.addItem(self.gridLayout.takeAt(i), *p2)
             self.gridLayout.addItem(self.gridLayout.takeAt(j), *p1)
@@ -89,7 +93,7 @@ class IndicSelectWindow(QWidget):
                 sys.exit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = IndicSelectWindow()
     w.show()
