@@ -429,6 +429,24 @@ border-color: rgba(255, 255, 255, 0);
             </widget>
            </widget>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QPushButton" name="ref_add_self_btn">
+              <property name="text">
+               <string>직접 추가</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ref_add_image_btn">
+              <property name="text">
+               <string>이미지로 추가</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="recipe_tab">
@@ -496,6 +514,118 @@ border-color: rgba(255, 255, 255, 0);
            <string>ㅁㅇㄴㅁㅇ</string>
           </property>
          </widget>
+        </widget>
+        <widget class="QWidget" name="ref_add_self_tab">
+         <attribute name="title">
+          <string>재료추가[직접]</string>
+         </attribute>
+         <widget class="QWidget" name="formLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>10</y>
+            <width>481</width>
+            <height>116</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="RefName">
+             <property name="text">
+              <string>이름</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="name_line_edit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="Amount">
+             <property name="text">
+              <string>양</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="amount_line_edit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="expiration_duration_label">
+             <property name="text">
+              <string>소비기한</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDateEdit" name="expiration_duration_date_edit">
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="dateTime">
+              <datetime>
+               <hour>15</hour>
+               <minute>0</minute>
+               <second>3</second>
+               <year>2025</year>
+               <month>1</month>
+               <day>30</day>
+              </datetime>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+             <property name="date">
+              <date>
+               <year>2025</year>
+               <month>1</month>
+               <day>30</day>
+              </date>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="type_label">
+             <property name="text">
+              <string>종류</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="type_combo_box"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>130</y>
+            <width>491</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QPushButton" name="ref_add_self_ok_btn">
+             <property name="text">
+              <string>추가하기</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="ref_add_self_cancel_btn">
+             <property name="text">
+              <string>취소하기</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="ref_add_image_tab">
+         <attribute name="title">
+          <string>재료추가[이미지]</string>
+         </attribute>
         </widget>
        </widget>
       </item>
