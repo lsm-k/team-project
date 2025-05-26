@@ -1,9 +1,20 @@
-import sqlite3 as sql
+import sqlite3
 import os
+from dataclasses import dataclass
 
 db_path = os.path.join(os.path.dirname(__file__), "db.sqlite3")
-connection = sql.connect(db_path)
+connection = sqlite3.connect(db_path)
+connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
+
+
+@dataclass
+class Ref:
+    id: int = 0
+    Food_name: str = ""
+    Amount: int = 0
+    Expiration_date: str = ""
+    Food_type: str = "기타"
 
 
 class Database:
@@ -83,3 +94,12 @@ class Database:
             (Food_type, Food_name),
         )
         connection.commit()
+
+    @classmethod
+    def get_all(cls):
+        # 모든 데이터 조회
+        sql = """
+        SELECT * FROM Ref
+        """
+        cursor.execute(sql)
+        return [Ref(**row) for row in cursor.fetchall()]
