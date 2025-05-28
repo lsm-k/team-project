@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt, QMimeData, QCoreApplication, QUrl
 from PySide6.QtGui import QDrag, QPixmap, QPainter
+from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
 
@@ -131,9 +132,7 @@ class Mainwindow:
         self.search_manage_ref_modal.show()
 
     def search_ref_manage(self):
-        search_text = self.search_manage_ref_modal.name_edit.text()
-
-        print(self.search_manage_ref_modal.youtube_view)
+        search_text = self.search_manage_ref_modal.name_edit.text() + " 관리 방법"
 
         self.search_manage_ref_modal.youtube_view.load(QUrl(f"https://www.youtube.com/results?search_query={search_text}"))
         self.search_manage_ref_modal.google_view.load(QUrl(f"https://www.google.com/search?q={search_text}"))
