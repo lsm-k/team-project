@@ -90,6 +90,7 @@ class Mainwindow:
         self.display_none_all_tabs()
         self.window.tab_root.setCurrentIndex(TabKind.STORAGE_STATUS.value)
         self.setup_combo_box()
+        self.setup_sort_btn()
         self.window.show()
         sys.exit(app.exec())
 
@@ -111,4 +112,11 @@ class Mainwindow:
         print(f"Creating ref: {food_name}, {amount}, {expiration_date}, {food_type}")
 
         cs_db.Database.data_insert(food_name, amount, expiration_date, food_type)
+
+    def setup_sort_btn(self):
+        from .sort_combo_box import setup_ui
+        setup_ui(self.window.meat_sort_btn)
+        setup_ui(self.window.sea_food_sort_btn)
+        setup_ui(self.window.fruit_vegetable_sort_btn)
+        setup_ui(self.window.other_sort_btn)
 
