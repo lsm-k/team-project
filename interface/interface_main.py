@@ -97,6 +97,12 @@ class Mainwindow:
     def show_add_ref_modal(self):
         self.add_ref_modal = self.load_ui('add_ref_modal')
         self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+
+        button_bottom = self.window.ref_add_self_btn.mapToGlobal(self.window.ref_add_self_btn.rect().bottomLeft())
+        combo_x = button_bottom.x()
+        combo_y = button_bottom.y() + ((self.window.height() / 3) - 30)
+        self.add_ref_modal.setGeometry(combo_x, combo_y, self.add_ref_modal.width(), 25)
+
         self.add_ref_modal.show()
 
     def change_tab(self, tab_widget, tab_kind):
