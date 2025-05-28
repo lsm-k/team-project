@@ -2,9 +2,15 @@ import sys
 import os
 from enum import Enum
 
-from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QTextBrowser, QComboBox
+from PySide6.QtWidgets import (
+    QApplication,
+    QWidget,
+    QGridLayout,
+    QTextBrowser,
+    QComboBox,
+)
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile, Qt, QMimeData, QCoreApplication
+from PySide6.QtCore import QFile, Qt, QMimeData, QCoreApplication, QUrl
 from PySide6.QtGui import QDrag, QPixmap, QPainter
 
 from cold_storage import db as cs_db
@@ -13,7 +19,7 @@ from cold_storage import db as cs_db
 class FoodType(Enum):
     FRUIT_VEGETABLE = "과일 & 채소"
     MEAT = "육류"
-    SEA_FOOD= "어류"
+    SEA_FOOD = "어류"
     OTHER = "기타"
 
 
@@ -29,6 +35,7 @@ class TabKind(Enum):
 class Mainwindow:
     window = None
     add_ref_modal = None
+    search_manage_ref_modal = None
 
     def load_ui(self, file_name):
         ui_file = QFile(os.path.join(os.path.dirname(__file__), f"{file_name}.ui"))
@@ -38,24 +45,24 @@ class Mainwindow:
         ui_file.close()
         return ui
 
-
-    def setup_ui():
-        Mainwindow.window = Mainwindow.load_ui('material_stat')
-        Mainwindow.add_ref_modal = Mainwindow.load_ui('add_ref_modal')
-        return Mainwindow.window
-
+    def setup_ui(self):
+        self.window = self.load_ui("material_stat")
+        self.add_ref_modal = self.load_ui("add_ref_modal")
+        self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
         for i in range(0, tab_cnt):
             self.window.tab_root.setTabVisible(i, False)
-        
+
     def setting_events(self):
         # side bar btns
         self.window.storage_status_btn.clicked.connect(
             lambda: self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
         )
-        self.window.recipe_btn.clicked.connect(lambda: self.change_tab(self.window.tab_root, TabKind.RECIPE))
+        self.window.recipe_btn.clicked.connect(
+            lambda: self.change_tab(self.window.tab_root, TabKind.RECIPE)
+        )
         self.window.recommend_btn.clicked.connect(
             lambda: self.change_tab(self.window.tab_root, TabKind.RECOMMEND)
         )
@@ -68,11 +75,14 @@ class Mainwindow:
         # )
 
         # ref add btns
-        self.window.ref_add_self_btn.clicked.connect(
-            self.show_add_ref_modal
-        )
+        self.window.ref_add_self_btn.clicked.connect(self.show_add_ref_modal)
 
-        self.add_ref_modal.buttonBox.connected(
+        self.window.open_search_manage_modal_btn.clicked.connect(
+            self.show_search_manage_ref_modal
+        )
+        self.search_manage_ref_modal.search_btn.clicked.connect(self.search_ref_manage)
+
+        # self.add_ref_modal.buttonBox.connected(show_add_ref_modal)
 
     def setup_combo_box(self):
         combo = self.window.findChild(QComboBox, "type_combo_box")
@@ -85,25 +95,50 @@ class Mainwindow:
 
     def show(self):
         app = QApplication(sys.argv)
-        self.window = self.load_ui('material_stat')
+
+        self.setup_ui()
+        self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.search_manage_ref_modal.setWindowTitle('재료 보관방법 검색창')
+
         self.setting_events()
+
         self.display_none_all_tabs()
         self.window.tab_root.setCurrentIndex(TabKind.STORAGE_STATUS.value)
+
         self.setup_combo_box()
         self.setup_sort_btn()
+
         self.window.show()
+
         sys.exit(app.exec())
 
     def show_add_ref_modal(self):
-        self.add_ref_modal = self.load_ui('add_ref_modal')
-        self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-
-        button_bottom = self.window.ref_add_self_btn.mapToGlobal(self.window.ref_add_self_btn.rect().bottomLeft())
+        button_bottom = self.window.ref_add_self_btn.mapToGlobal(
+            self.window.ref_add_self_btn.rect().bottomLeft()
+        )
         combo_x = button_bottom.x()
         combo_y = button_bottom.y() + ((self.window.height() / 3) - 30)
         self.add_ref_modal.setGeometry(combo_x, combo_y, self.add_ref_modal.width(), 25)
 
         self.add_ref_modal.show()
+
+    def show_search_manage_ref_modal(self):
+        # button_bottom = self.window..mapToGlobal(self.window.ref_add_self_btn.rect().bottomLeft())
+        # combo_x = button_bottom.x()
+        # combo_y = button_bottom.y() + ((self.window.height() / 3) - 30)
+        # self.add_ref_modal.setGeometry(combo_x, combo_y, self.add_ref_modal.width(), 25)
+
+        self.search_manage_ref_modal.show()
+
+    def search_ref_manage(self):
+        search_text = self.search_manage_ref_modal.name_edit.text()
+
+        print(self.search_manage_ref_modal.youtube_view)
+
+        self.search_manage_ref_modal.youtube_view.load(QUrl(f"https://www.youtube.com/results?search_query={search_text}"))
+        self.search_manage_ref_modal.google_view.load(QUrl(f"https://www.google.com/search?q={search_text}"))
+
+
 
     def change_tab(self, tab_widget, tab_kind):
         tab_widget.setCurrentIndex(tab_kind.value)
@@ -121,8 +156,8 @@ class Mainwindow:
 
     def setup_sort_btn(self):
         from .sort_combo_box import setup_ui
+
         setup_ui(self.window.meat_sort_btn)
         setup_ui(self.window.sea_food_sort_btn)
         setup_ui(self.window.fruit_vegetable_sort_btn)
         setup_ui(self.window.other_sort_btn)
-
