@@ -587,22 +587,70 @@ li.checked::marker { content: &quot;\2612&quot;; }
          <attribute name="title">
           <string>설정</string>
          </attribute>
-         <widget class="QLineEdit" name="lineEdit_4">
-          <property name="geometry">
-           <rect>
-            <x>160</x>
-            <y>100</y>
-            <width>113</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>유융뉴ㅠ</string>
-          </property>
-          <property name="placeholderText">
-           <string>ㅁㅇㄴㅁㅇ</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="font_size_label">
+              <property name="text">
+               <string>글자 크기</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="font_size_cbx"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="lauage_label">
+              <property name="text">
+               <string>언어</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="lauage_cbx"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="theme_label">
+              <property name="text">
+               <string>테마</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="theme_cbx"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="data_backup_btn">
+              <property name="text">
+               <string>백업하기</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="data_import_btn">
+              <property name="text">
+               <string>가져오기</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="data_reset_btn">
+              <property name="text">
+               <string>초기화</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="ref_add_self_tab">
          <attribute name="title">
