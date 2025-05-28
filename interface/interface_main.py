@@ -7,18 +7,13 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt, QMimeData
 from PySide6.QtGui import QDrag, QPixmap, QPainter
 
-from database.cold_storage import db as cs_db
+from cold_storage import db as cs_db
 
 
 class FoodType(Enum):
-    FRUIT = "과일"
-    VEGETABLE = "채소"
+    FRUIT_VEGETABLE = "과일 & 채소"
     MEAT = "육류"
-    FISH = "어류"
-    DAIRY = "유제품"
-    GRAIN = "곡류"
-    PROCESSED = "가공식품"
-    BEVERAGE = "음료수"
+    SEA_FOOD= "어류"
     OTHER = "기타"
 
 
