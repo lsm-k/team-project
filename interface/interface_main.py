@@ -4,7 +4,7 @@ from enum import Enum
 
 from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QTextBrowser
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile, Qt, QMimeData
+from PySide6.QtCore import QFile, Qt, QMimeData, QCoreApplication
 from PySide6.QtGui import QDrag, QPixmap, QPainter
 
 from cold_storage import db as cs_db
@@ -25,6 +25,9 @@ class TabKind(Enum):
     REF_ADD_SELF = 4
     REF_ADD_IMAGE = 5
 
+class TabKind_nomal(Enum):
+    NOMAL = 0
+    FAVORITE = 1
 
 class Mainwindow:
     window = None
@@ -41,32 +44,40 @@ class Mainwindow:
         tab_cnt = self.window.tab_root.count()
         for i in range(0, tab_cnt):
             self.window.tab_root.setTabVisible(i, False)
+        
+        tab_cnt_ref = self.window.ref_tab_widget.count()
+        for i in range(0, tab_cnt_ref):
+            self.window.ref_tab_widget.setTabVisible(i, False)
 
     def setting_events(self):
         # side bar btns
         self.window.storage_status_btn.clicked.connect(
-            lambda: self.change_tab(TabKind.STORAGE_STATUS)
+            lambda: self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
         )
-        self.window.recipe_btn.clicked.connect(lambda: self.change_tab(TabKind.RECIPE))
+        self.window.recipe_btn.clicked.connect(lambda: self.change_tab(self.window.tab_root, TabKind.RECIPE))
         self.window.recommend_btn.clicked.connect(
-            lambda: self.change_tab(TabKind.RECOMMEND)
+            lambda: self.change_tab(self.window.tab_root, TabKind.RECOMMEND)
         )
         self.window.setting_btn.clicked.connect(
-            lambda: self.change_tab(TabKind.SETTING)
+            lambda: self.change_tab(self.window.tab_root, TabKind.SETTING)
+        )
+
+        self.window.fav_ch_btn.clicked.connect(
+            lambda: self.change_tab(self.window.ref_tab_widget, TabKind_nomal.NOMAL)
         )
 
         # ref add btns
         self.window.ref_add_self_btn.clicked.connect(
-            lambda: self.change_tab(TabKind.REF_ADD_SELF)
+            lambda: self.change_tab(self.window.tab_root, TabKind.REF_ADD_SELF)
         )
-        self.window.ref_add_image_btn.clicked.connect(
-            lambda: self.change_tab(TabKind.REF_ADD_IMAGE)
-        )
+        # self.window.ref_add_image_btn.clicked.connect(
+        #     lambda: self.change_tab(self.window.tab_root, TabKind.REF_ADD_IMAGE)
+        # )
 
         # ref add self tab
         self.window.ref_add_self_ok_btn.clicked.connect(self.create_ref)
         self.window.ref_add_self_cancel_btn.clicked.connect(
-            lambda: self.change_tab(TabKind.STORAGE_STATUS)
+            lambda: self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
         )
 
     def setup_combo_box(self):
@@ -84,8 +95,8 @@ class Mainwindow:
         self.window.show()
         sys.exit(app.exec())
 
-    def change_tab(self, tab_kind):
-        self.window.tab_root.setCurrentIndex(tab_kind.value)
+    def change_tab(self, tab_widget, tab_kind):
+        tab_widget.setCurrentIndex(tab_kind.value)
 
     # TODO: add validation, insert error handling
     def create_ref(self):
@@ -97,4 +108,4 @@ class Mainwindow:
 
         cs_db.Database.data_insert(food_name, amount, expiration_date, food_type)
 
-        self.change_tab(TabKind.STORAGE_STATUS)
+        self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
