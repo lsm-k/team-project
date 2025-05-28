@@ -151,9 +151,9 @@ border-color: rgba(255, 255, 255, 0);
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
-               <width>453</width>
-               <height>817</height>
+               <y>-96</y>
+               <width>464</width>
+               <height>833</height>
               </rect>
              </property>
              <property name="layoutDirection">
@@ -190,12 +190,7 @@ border-color: rgba(255, 255, 255, 0);
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">border-color: rgb(0, 0, 0);
-selection-background-color: rgb(207, 207, 207);
-border-style: outset;
-border-width: 1px;
-border-radius: 25;
-</string>
+                    <string notr="true"/>
                    </property>
                    <property name="text">
                     <string>즐겨찾는 재료</string>
@@ -234,14 +229,14 @@ border-radius: 25;
               <item>
                <widget class="QTabWidget" name="ref_tab_widget">
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
                 </property>
-                <widget class="QWidget" name="ref_normal" native="true">
+                <widget class="QWidget" name="ref_normal">
                  <attribute name="title">
-                  <string>일반</string>
+                  <string>즐겨찾기</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_3">
                   <item row="1" column="1">
@@ -337,7 +332,7 @@ border-radius: 25;
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>179</width>
+                          <width>178</width>
                           <height>492</height>
                          </rect>
                         </property>
@@ -737,7 +732,7 @@ border-radius: 25;
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>179</width>
+                          <width>178</width>
                           <height>492</height>
                          </rect>
                         </property>
@@ -1048,8 +1043,210 @@ border-radius: 25;
                 </widget>
                 <widget class="QWidget" name="ref_fav">
                  <attribute name="title">
-                  <string>즐겨찾기</string>
+                  <string>일반</string>
                  </attribute>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="0" column="0">
+                   <widget class="QFrame" name="verticalFrame_7">
+                    <layout class="QVBoxLayout" name="verticalLayout_14">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_10">
+                       <item>
+                        <widget class="QPushButton" name="pushButton_10">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>13</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>⇅</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="pushButton_11">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>5</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>🔍︎</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_5">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>150</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_5">
+                         <property name="text">
+                          <string>육류</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <widget class="QScrollArea" name="scrollArea_7">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>190</width>
+                         <height>295</height>
+                        </size>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LayoutDirection::LeftToRight</enum>
+                       </property>
+                       <property name="horizontalScrollBarPolicy">
+                        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+                       </property>
+                       <property name="widgetResizable">
+                        <bool>true</bool>
+                       </property>
+                       <widget class="QWidget" name="scrollAreaWidgetContents_7">
+                        <property name="geometry">
+                         <rect>
+                          <x>0</x>
+                          <y>0</y>
+                          <width>262</width>
+                          <height>492</height>
+                         </rect>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_15">
+                         <item>
+                          <widget class="QTextBrowser" name="textBrowser_21">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>160</width>
+                             <height>90</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QTextBrowser" name="textBrowser_22">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>160</width>
+                             <height>90</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QTextBrowser" name="textBrowser_23">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>160</width>
+                             <height>90</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QTextBrowser" name="textBrowser_24">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>160</width>
+                             <height>90</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QTextBrowser" name="textBrowser_25">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>160</width>
+                             <height>90</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </widget>
               </item>
@@ -1172,118 +1369,6 @@ border-radius: 25;
            </layout>
           </item>
          </layout>
-        </widget>
-        <widget class="QWidget" name="ref_add_self_tab">
-         <attribute name="title">
-          <string>재료추가[직접]</string>
-         </attribute>
-         <widget class="QWidget" name="formLayoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>10</y>
-            <width>481</width>
-            <height>116</height>
-           </rect>
-          </property>
-          <layout class="QFormLayout" name="formLayout">
-           <item row="0" column="0">
-            <widget class="QLabel" name="RefName">
-             <property name="text">
-              <string>이름</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="name_line_edit"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="Amount">
-             <property name="text">
-              <string>양</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="amount_line_edit"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="expiration_duration_label">
-             <property name="text">
-              <string>소비기한</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QDateEdit" name="expiration_duration_date_edit">
-             <property name="frame">
-              <bool>true</bool>
-             </property>
-             <property name="dateTime">
-              <datetime>
-               <hour>6</hour>
-               <minute>0</minute>
-               <second>3</second>
-               <year>2025</year>
-               <month>1</month>
-               <day>30</day>
-              </datetime>
-             </property>
-             <property name="calendarPopup">
-              <bool>true</bool>
-             </property>
-             <property name="date">
-              <date>
-               <year>2025</year>
-               <month>1</month>
-               <day>30</day>
-              </date>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="type_label">
-             <property name="text">
-              <string>종류</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="type_combo_box"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="horizontalLayoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>130</y>
-            <width>491</width>
-            <height>81</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QPushButton" name="ref_add_self_ok_btn">
-             <property name="text">
-              <string>추가하기</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="ref_add_self_cancel_btn">
-             <property name="text">
-              <string>취소하기</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="ref_add_image_tab">
-         <attribute name="title">
-          <string>재료추가[이미지]</string>
-         </attribute>
         </widget>
        </widget>
       </item>

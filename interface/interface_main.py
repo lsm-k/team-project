@@ -2,7 +2,7 @@ import sys
 import os
 from enum import Enum
 
-from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QTextBrowser
+from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QTextBrowser, QComboBox
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt, QMimeData, QCoreApplication
 from PySide6.QtGui import QDrag, QPixmap, QPainter
@@ -31,14 +31,22 @@ class TabKind_nomal(Enum):
 
 class Mainwindow:
     window = None
+    add_ref_modal = None
 
-    def load_ui(self):
-        ui_file = QFile(os.path.join(os.path.dirname(__file__), "material_stat.ui"))
+    def load_ui(self, file_name):
+        ui_file = QFile(os.path.join(os.path.dirname(__file__), f"{file_name}.ui"))
         ui_file.open(QFile.ReadOnly)
         loader = QUiLoader()
-        window = loader.load(ui_file)
+        ui = loader.load(ui_file)
         ui_file.close()
-        self.window = window
+        return ui
+
+
+    def setup_ui():
+        Mainwindow.window = Mainwindow.load_ui('material_stat')
+        Mainwindow.add_ref_modal = Mainwindow.load_ui('add_ref_modal')
+        return Mainwindow.window
+
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -68,32 +76,42 @@ class Mainwindow:
 
         # ref add btns
         self.window.ref_add_self_btn.clicked.connect(
-            lambda: self.change_tab(self.window.tab_root, TabKind.REF_ADD_SELF)
+            self.show_add_ref_modal
         )
+
         # self.window.ref_add_image_btn.clicked.connect(
         #     lambda: self.change_tab(self.window.tab_root, TabKind.REF_ADD_IMAGE)
         # )
 
         # ref add self tab
-        self.window.ref_add_self_ok_btn.clicked.connect(self.create_ref)
-        self.window.ref_add_self_cancel_btn.clicked.connect(
-            lambda: self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
-        )
+        # self.window.ref_add_self_ok_btn.clicked.connect(self.create_ref)
+        # self.window.ref_add_self_cancel_btn.clicked.connect(
+        #     lambda: self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
+        # )
 
     def setup_combo_box(self):
-        self.window.type_combo_box.clear()
-        lists = [i.value for i in FoodType]
-        self.window.type_combo_box.addItems(lists)
+        combo = self.window.findChild(QComboBox, "type_combo_box")
+        if combo:
+            combo.clear()
+            lists = [i.value for i in FoodType]
+            combo.addItems(lists)
+        else:
+            print("type_combo_box를 찾을 수 없습니다.")
 
     def show(self):
         app = QApplication(sys.argv)
-        self.load_ui()
+        self.window = self.load_ui('material_stat')
         self.setting_events()
         self.display_none_all_tabs()
         self.window.tab_root.setCurrentIndex(TabKind.STORAGE_STATUS.value)
         self.setup_combo_box()
         self.window.show()
         sys.exit(app.exec())
+
+    def show_add_ref_modal(self):
+        self.add_ref_modal = self.load_ui('add_ref_modal')
+        self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.add_ref_modal.show()
 
     def change_tab(self, tab_widget, tab_kind):
         tab_widget.setCurrentIndex(tab_kind.value)
