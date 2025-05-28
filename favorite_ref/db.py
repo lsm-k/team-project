@@ -2,7 +2,7 @@ import sqlite3
 import os
 from dataclasses import dataclass
 
-from ..cold_storage import db as cs_db
+from cold_storage import db as cs_db
 
 con = sqlite3.connect(cs_db.db_path)
 con.row_factory = sqlite3.Row
@@ -12,7 +12,7 @@ cursor = con.cursor()
 @dataclass
 class FavoriteRef:
     id: int = 0
-    ref_if: int = 0
+    ref_id: int = 0
     created_at: str = ""
 
 
@@ -23,7 +23,7 @@ class Database:
             """
         CREATE TABLE IF NOT EXISTS FavoriteRef (
             id	INTEGER PRIMARY KEY AUTOINCREMENT,
-            ref_if INTEGER NOT NULL,
+            ref_id INTEGER NOT NULL,
             created_at TEXT NOT NULL
         )
         """
@@ -33,7 +33,7 @@ class Database:
     @classmethod
     def create(cls, ref_id: int):
         sql = """
-        INSERT INTO FavoriteRef (ref_if, created_at)
+        INSERT INTO FavoriteRef (ref_id, created_at)
         VALUES (?, datetime('now'))
         """
         cursor.execute(sql, (ref_id,))
@@ -43,7 +43,7 @@ class Database:
     @classmethod
     def get_with_ref_id(cls, ref_id: int):
         sql = """
-        SELECT * FROM FavoriteRef WHERE ref_if = ?
+        SELECT * FROM FavoriteRef WHERE ref_id = ?
         """
         cursor.execute(sql, (ref_id,))
         row = cursor.fetchone()
@@ -58,3 +58,12 @@ class Database:
         """
         cursor.execute(sql)
         return [FavoriteRef(**row) for row in cursor.fetchall()]
+
+    @classmethod
+    def delete(cls, id: int):
+        sql = """
+        DELETE FROM FavoriteRef WHERE id = ?
+        """
+        cursor.execute(sql, (id,))
+        con.commit()
+        return cursor.rowcount > 0
