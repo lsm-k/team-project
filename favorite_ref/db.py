@@ -2,7 +2,7 @@ import sqlite3
 import os
 from dataclasses import dataclass
 
-from ..cold_storage import db as cs_db
+from cold_storage import db as cs_db
 
 con = sqlite3.connect(cs_db.db_path)
 con.row_factory = sqlite3.Row
