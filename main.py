@@ -3,7 +3,7 @@ from cold_storage import db as cs_db
 from favorite_ref import db as fr_db
 
 cold_storage = cs_db.Database()
-cold_storage.setting_table()
+cold_storage.setting_table()    
 
 fr_db.Database.setting_table()
 

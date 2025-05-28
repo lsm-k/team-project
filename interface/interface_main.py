@@ -25,9 +25,6 @@ class TabKind(Enum):
     REF_ADD_SELF = 4
     REF_ADD_IMAGE = 5
 
-class TabKind_nomal(Enum):
-    NOMAL = 0
-    FAVORITE = 1
 
 class Mainwindow:
     window = None
@@ -53,10 +50,6 @@ class Mainwindow:
         for i in range(0, tab_cnt):
             self.window.tab_root.setTabVisible(i, False)
         
-        tab_cnt_ref = self.window.ref_tab_widget.count()
-        for i in range(0, tab_cnt_ref):
-            self.window.ref_tab_widget.setTabVisible(i, False)
-
     def setting_events(self):
         # side bar btns
         self.window.storage_status_btn.clicked.connect(
@@ -70,24 +63,16 @@ class Mainwindow:
             lambda: self.change_tab(self.window.tab_root, TabKind.SETTING)
         )
 
-        self.window.fav_ch_btn.clicked.connect(
-            lambda: self.change_tab(self.window.ref_tab_widget, TabKind_nomal.NOMAL)
-        )
+        # self.window.fav_ch_btn.clicked.connect(
+        #     lambda: self.change_tab(self.window.ref_tab_widget, TabKind_nomal.NOMAL)
+        # )
 
         # ref add btns
         self.window.ref_add_self_btn.clicked.connect(
             self.show_add_ref_modal
         )
 
-        # self.window.ref_add_image_btn.clicked.connect(
-        #     lambda: self.change_tab(self.window.tab_root, TabKind.REF_ADD_IMAGE)
-        # )
-
-        # ref add self tab
-        # self.window.ref_add_self_ok_btn.clicked.connect(self.create_ref)
-        # self.window.ref_add_self_cancel_btn.clicked.connect(
-        #     lambda: self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
-        # )
+        self.add_ref_modal.buttonBox.connected(
 
     def setup_combo_box(self):
         combo = self.window.findChild(QComboBox, "type_combo_box")
@@ -115,15 +100,15 @@ class Mainwindow:
 
     def change_tab(self, tab_widget, tab_kind):
         tab_widget.setCurrentIndex(tab_kind.value)
+        print(f"Changed tab to {tab_kind.value} ({tab_kind.name})")
 
     # TODO: add validation, insert error handling
     def create_ref(self):
-        food_name = self.window.name_line_edit.text()
-        amount = self.window.amount_line_edit.text()
-        expiration_date = self.window.expiration_duration_date_edit.text()
-        food_type = self.window.type_combo_box.currentText()
+        food_name = self.add_ref_modal.name_line_edit.text()
+        amount = self.add_ref_modal.amount_line_edit.text()
+        expiration_date = self.add_ref_modal.expiration_duration_date_edit.text()
+        food_type = self.add_ref_modal.type_combo_box.currentText()
         print(f"Creating ref: {food_name}, {amount}, {expiration_date}, {food_type}")
 
         cs_db.Database.data_insert(food_name, amount, expiration_date, food_type)
 
-        self.change_tab(self.window.tab_root, TabKind.STORAGE_STATUS)
