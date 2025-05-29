@@ -81,7 +81,11 @@ class Mainwindow:
         self.window.open_search_manage_modal_btn.clicked.connect(
             self.show_search_manage_ref_modal
         )
+
         self.search_manage_ref_modal.search_btn.clicked.connect(self.search_ref_manage)
+
+        self.search_manage_ref_modal.name_edit.returnPressed.connect(self.search_ref_manage)        #엔터키 누르면 검색
+
 
         # self.add_ref_modal.buttonBox.connected(show_add_ref_modal)
 

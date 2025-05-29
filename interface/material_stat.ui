@@ -126,7 +126,7 @@ border-color: rgba(255, 255, 255, 0);
       <item>
        <widget class="QTabWidget" name="tab_root">
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="tabBarAutoHide">
          <bool>false</bool>
