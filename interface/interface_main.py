@@ -8,9 +8,18 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QTextBrowser,
     QComboBox,
+    QFrame,
+)
+from PySide6.QtCore import (
+    QFile, 
+    Qt, 
+    QMimeData, 
+    QCoreApplication, 
+    QUrl,
+    QPropertyAnimation,
+    QRect,
 )
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile, Qt, QMimeData, QCoreApplication, QUrl
 from PySide6.QtGui import QDrag, QPixmap, QPainter
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
@@ -50,11 +59,37 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
+        self.window.search_frame_1.setVisible(False)
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
         for i in range(0, tab_cnt):
             self.window.tab_root.setTabVisible(i, False)
+
+    def animation_search_box(self, search_box_name):
+        search_box = self.window.findChild(QFrame, f"{search_box_name}")
+
+        if not search_box:
+            print(f"{search_box_name}를 찾을 수 없습니다.")
+            return
+
+        if search_box.isVisible() and search_box.maximumHeight() > 0:
+            start_hight = search_box.height()
+            end_hight = 0
+            self.anim = QPropertyAnimation(search_box, b"maximumHeight")
+            self.anim.setDuration(300)
+            self.anim.setStartValue(start_hight)
+            self.anim.setEndValue(end_hight)
+            self.anim.start()
+        else:
+            search_box.setVisible(True)
+            start_hight = search_box.maximumHeight()
+            end_hight = search_box.height() + 100  
+            self.anim = QPropertyAnimation(search_box, b"maximumHeight")
+            self.anim.setDuration(300)
+            self.anim.setStartValue(start_hight)
+            self.anim.setEndValue(end_hight)
+            self.anim.start()
 
     def setting_events(self):
         # side bar btns
@@ -86,6 +121,9 @@ class Mainwindow:
 
         self.search_manage_ref_modal.name_edit.returnPressed.connect(self.search_ref_manage)        #엔터키 누르면 검색
 
+        self.window.show_search_box_btn_1.clicked.connect(
+            lambda: self.animation_search_box("search_frame_1")
+        )
 
         # self.add_ref_modal.buttonBox.connected(show_add_ref_modal)
 
@@ -126,6 +164,9 @@ class Mainwindow:
         self.add_ref_modal.setGeometry(combo_x, combo_y, self.add_ref_modal.width(), 25)
 
         self.add_ref_modal.show()
+
+    def show_search_box(self, search_box_name):
+        search_box = self.window.findChild(QFrame, f"{search_box_name}")
 
     def show_search_manage_ref_modal(self):
         # button_bottom = self.window..mapToGlobal(self.window.ref_add_self_btn.rect().bottomLeft())
