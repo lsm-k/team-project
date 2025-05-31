@@ -59,7 +59,10 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
-        self.window.search_frame_1.setVisible(False)
+        for i in range(1, 5):
+            frame = self.window.findChild(QFrame, f"search_frame_{i}")
+            if frame:
+                frame.setVisible(False)
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -91,6 +94,7 @@ class Mainwindow:
             self.anim.setEndValue(end_hight)
             self.anim.start()
 
+    #set window button events
     def setting_events(self):
         # side bar btns
         self.window.storage_status_btn.clicked.connect(
@@ -123,6 +127,18 @@ class Mainwindow:
 
         self.window.show_search_box_btn_1.clicked.connect(
             lambda: self.animation_search_box("search_frame_1")
+        )
+
+        self.window.show_search_box_btn_2.clicked.connect(
+            lambda: self.animation_search_box("search_frame_2")
+        )
+
+        self.window.show_search_box_btn_3.clicked.connect(
+            lambda: self.animation_search_box("search_frame_3")
+        )
+
+        self.window.show_search_box_btn_4.clicked.connect(
+            lambda: self.animation_search_box("search_frame_4")
         )
 
         # self.add_ref_modal.buttonBox.connected(show_add_ref_modal)
@@ -164,9 +180,6 @@ class Mainwindow:
         self.add_ref_modal.setGeometry(combo_x, combo_y, self.add_ref_modal.width(), 25)
 
         self.add_ref_modal.show()
-
-    def show_search_box(self, search_box_name):
-        search_box = self.window.findChild(QFrame, f"{search_box_name}")
 
     def show_search_manage_ref_modal(self):
         # button_bottom = self.window..mapToGlobal(self.window.ref_add_self_btn.rect().bottomLeft())
