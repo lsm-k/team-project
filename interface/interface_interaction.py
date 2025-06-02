@@ -30,10 +30,8 @@ from cold_storage import db as cs_db
 class TabKind(Enum):
     STORAGE_STATUS = 0
     RECIPE = 1
-    RECOMMEND = 2
+    HELP = 2
     SETTING = 3
-    REF_ADD_SELF = 4
-    REF_ADD_IMAGE = 5
 
 
 class InterfaceInteraction:
@@ -54,8 +52,8 @@ class InterfaceInteraction:
         self.window.recipe_btn.clicked.connect(
             lambda: self.change_tab(self.window.tab_root, TabKind.RECIPE)
         )
-        self.window.recommend_btn.clicked.connect(
-            lambda: self.change_tab(self.window.tab_root, TabKind.RECOMMEND)
+        self.window.show_help_btn.clicked.connect(
+            lambda: self.change_tab(self.window.tab_root, TabKind.HELP)
         )
         self.window.setting_btn.clicked.connect(
             lambda: self.change_tab(self.window.tab_root, TabKind.SETTING)

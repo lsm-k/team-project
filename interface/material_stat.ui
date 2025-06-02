@@ -30,7 +30,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="side_v_layout">
+     <layout class="QVBoxLayout" name="side_v_layout" stretch="1,1,0,0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -74,23 +74,25 @@ border-color: rgba(255, 255, 255, 0);</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="recommend_btn">
+       <widget class="QPushButton" name="show_help_btn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <bold>false</bold>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgba(175, 227, 255, 0);
 border-color: rgba(255, 255, 255, 0);</string>
         </property>
         <property name="text">
-         <string>추
-천
-페
-이
-지</string>
+         <string>❔</string>
         </property>
        </widget>
       </item>
@@ -108,14 +110,19 @@ border-color: rgba(255, 255, 255, 0);</string>
           <height>24</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <bold>false</bold>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgba(175, 227, 255, 0);
 border-color: rgba(255, 255, 255, 0);
 </string>
         </property>
         <property name="text">
-         <string>설
-정</string>
+         <string>⚙️</string>
         </property>
        </widget>
       </item>
@@ -1184,9 +1191,9 @@ border-color: rgba(255, 255, 255, 0);
           </property>
          </widget>
         </widget>
-        <widget class="QWidget" name="recommend_tab">
+        <widget class="QWidget" name="help_tab">
          <attribute name="title">
-          <string>추천</string>
+          <string>도움말</string>
          </attribute>
          <widget class="QLineEdit" name="lineEdit_3">
           <property name="geometry">
