@@ -119,9 +119,6 @@ class RefCard(QFrame):
                     background: transparent;
                     font-size: 18px;
                 }
-                QPushButton:hover {
-                    transform: scale(1.1);
-                }
             """)
         else:
             self.favorite_btn.setText("🤍")
@@ -130,9 +127,6 @@ class RefCard(QFrame):
                     border: none;
                     background: transparent;
                     font-size: 18px;
-                }
-                QPushButton:hover {
-                    transform: scale(1.1);
                 }
             """)
     
