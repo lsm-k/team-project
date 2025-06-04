@@ -166,11 +166,16 @@ class Mainwindow:
 
     def ref_get_all(self):
         from interface.ref_card import RefCard
+        from favorite_ref import db as favorite_db
 
         refs = cs_db.Database.get_all()
+        fav_ref_ids = []
+        for i in favorite_db.Database.get_all():
+            fav_ref_ids.append(i.ref_id)
 
         for i in refs:
             card = RefCard(i)
+
+            if i.id in fav_ref_ids:
+                card.set_favorite(True)
             self.window.meat_scroll_area_content.layout().insertWidget(2, card)
-
-

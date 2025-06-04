@@ -136,6 +136,9 @@ class RefCard(QFrame):
                 }
             """)
     
+    def set_favorite(self, is_favorite: bool):
+        self.is_favorite = is_favorite
+        self.update_favorite_button()
     def toggle_favorite(self):
         if self.is_favorite:
             self.unfavorite(self.ref_data.id)
