@@ -74,22 +74,6 @@ class InterfaceInteraction:
 
         self.search_manage_ref_modal.name_edit.returnPressed.connect(self.search_ref_manage)        #엔터키 누르면 검색
 
-        # self.window.show_search_box_btn_1.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_1")
-        # )
-
-        # self.window.show_search_box_btn_2.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_2")
-        # )
-
-        # self.window.show_search_box_btn_3.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_3")
-        # )
-
-        # self.window.show_search_box_btn_4.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_4")
-        # )
-
         for i in range (1,5):
             search_frame_num = self.window.findChild(QPushButton, f"show_search_box_btn_{i}")
             if search_frame_num:
