@@ -85,6 +85,8 @@ class Mainwindow:
         self.setup_combo_box()
         self.setup_sort_btn()
 
+        self.ref_get_all()
+
         self.window.show()
 
         sys.exit(app.exec())
@@ -161,3 +163,14 @@ class Mainwindow:
             self.anim.setStartValue(start_hight)
             self.anim.setEndValue(end_hight)
             self.anim.start()
+
+    def ref_get_all(self):
+        from interface.ref_card import RefCard
+
+        refs = cs_db.Database.get_all()
+
+        for i in refs:
+            card = RefCard(i)
+            self.window.meat_scroll_area_content.layout().insertWidget(2, card)
+
+
