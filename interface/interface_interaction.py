@@ -33,6 +33,14 @@ class TabKind(Enum):
     HELP = 2
     SETTING = 3
 
+class RecipeTabKind(Enum):
+    MAIN = 0
+    BEEF = 1
+    FISHES = 2
+    VEGETABLE = 3
+    ANOTHER = 4
+    TAB = 5
+
 
 class InterfaceInteraction:
     window = None
@@ -96,3 +104,11 @@ class InterfaceInteraction:
                 search_frame_num.clicked.connect(
                     lambda checked = False, num=i: self.animation_search_box(f"search_frame_{num}")
                 )
+        
+        self.window.recipe_meat_btn.clicked.connect(
+            lambda :self.change_tab_recipe(RecipeTabKind.BEEF)
+        )
+
+        self.window.recipe_meat_btn.clicked.connect(
+            lambda : self.popup_animation_from_point("test_group_box", 35, 10)
+        )
