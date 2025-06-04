@@ -18,12 +18,9 @@ def setup_ui(tool_btn):
     combo_box = FocusComboBox()
     combo_box.addItems(
         [
-            "이름 오름차순",
-            "이름 내림차순",
-            "날짜 오름차순",
-            "날짜 내림차순",
-            "크기 오름차순",
-            "크기 내림차순",
+            "등록 최신순",
+            "등록 오래된순",
+            "소비기한 임박순",
         ]
     )
     combo_box.setVisible(False)
