@@ -72,9 +72,8 @@ class Mainwindow:
         tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
         tab_2.tabBar().hide()
 
-    #set window button events
     def setup_combo_box(self):
-        combo = self.window.findChild(QComboBox, "type_combo_box")
+        combo = self.add_ref_modal.findChild(QComboBox, "type_combo_box")
         if combo:
             combo.clear()
             lists = [i.value for i in FoodType]
