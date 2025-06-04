@@ -123,7 +123,7 @@ class Mainwindow:
         self.search_manage_ref_modal.show()
 
     def search_ref_manage(self):
-        search_text = self.search_manage_ref_modal.name_edit.text() + " 관리 방법"
+        search_text = self.search_manage_ref_modal.name_edit.text() + " 보관 방법"
 
         self.search_manage_ref_modal.youtube_view.load(QUrl(f"https://www.youtube.com/results?search_query={search_text}"))
         self.search_manage_ref_modal.google_view.load(QUrl(f"https://www.google.com/search?q={search_text}"))
