@@ -9,8 +9,6 @@ from PySide6.QtWidgets import (
     QTextBrowser,
     QComboBox,
     QFrame,
-    QGroupBox,
-    QVBoxLayout,
 )
 from PySide6.QtCore import (
     QFile, 
@@ -27,9 +25,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind
-from interface.Create_object import ref_group_box
 
-# 즐겨찾기 했을시 사용 이모티콘 💖
 
 class FoodType(Enum):
     FRUIT_VEGETABLE = "과일 & 채소"
@@ -59,16 +55,6 @@ class Mainwindow:
             if frame:
                 frame.setVisible(False)
 
-        # verticalWidget을 찾고, 레이아웃에 ref_group_box 추가
-        vertical_widget = self.window.findChild(QWidget, "verticalWidget")
-        if vertical_widget:
-            layout = vertical_widget.layout()
-            if layout is None:
-                layout = QVBoxLayout(vertical_widget)
-                vertical_widget.setLayout(layout)
-            group = ref_group_box("예시 제목")
-            layout.addWidget(group)
-
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
         for i in range(0, tab_cnt):
@@ -96,12 +82,11 @@ class Mainwindow:
         self.display_none_all_tabs()
         self.window.tab_root.setCurrentIndex(TabKind.STORAGE_STATUS.value)
 
-        ref_group_box
-
         self.setup_combo_box()
         self.setup_sort_btn()
 
         self.window.show()
+
         sys.exit(app.exec())
 
     def show_add_ref_modal(self):
@@ -176,4 +161,3 @@ class Mainwindow:
             self.anim.setStartValue(start_hight)
             self.anim.setEndValue(end_hight)
             self.anim.start()
-
