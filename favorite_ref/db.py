@@ -60,10 +60,10 @@ class Database:
         return [FavoriteRef(**row) for row in cursor.fetchall()]
 
     @classmethod
-    def delete(cls, id: int):
+    def delete(cls, ref_id: int):
         sql = """
-        DELETE FROM FavoriteRef WHERE id = ?
+        DELETE FROM FavoriteRef WHERE ref_id = ?
         """
-        cursor.execute(sql, (id,))
+        cursor.execute(sql, (ref_id,))
         con.commit()
         return cursor.rowcount > 0
