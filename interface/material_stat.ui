@@ -248,7 +248,7 @@ border-color: rgba(255, 255, 255, 0);
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
-               <widget class="QWidget" name="scrollAreaWidgetContents_19">
+               <widget class="QWidget" name="other_scroll_area_content">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
@@ -483,7 +483,7 @@ border-color: rgba(255, 255, 255, 0);
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
-               <widget class="QWidget" name="scrollAreaWidgetContents_18">
+               <widget class="QWidget" name="meat_scroll_area_content">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
@@ -699,7 +699,7 @@ border-color: rgba(255, 255, 255, 0);
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
-               <widget class="QWidget" name="scrollAreaWidgetContents_20">
+               <widget class="QWidget" name="sea_food_scroll_area_content">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
@@ -934,7 +934,7 @@ border-color: rgba(255, 255, 255, 0);
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
-               <widget class="QWidget" name="scrollAreaWidgetContents_17">
+               <widget class="QWidget" name="fruit_vegetable_scroll_area_content">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
