@@ -9,6 +9,10 @@ from PySide6.QtWidgets import (
     QTextBrowser,
     QComboBox,
     QFrame,
+    QTabWidget,
+    QLineEdit,
+    QPushButton,
+    QGroupBox,
 )
 from PySide6.QtCore import (
     QFile, 
@@ -24,7 +28,7 @@ from PySide6.QtGui import QDrag, QPixmap, QPainter
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
-from interface.interface_interaction import InterfaceInteraction, TabKind
+from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 
 
 class FoodType(Enum):
@@ -54,11 +58,19 @@ class Mainwindow:
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
             if frame:
                 frame.setVisible(False)
+        self.window.recipe_search_box.textChanged.connect(self.toggle_button_by_lineedit)
+        self.toggle_button_by_lineedit()
+
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
         for i in range(0, tab_cnt):
             self.window.tab_root.setTabVisible(i, False)
+
+    def display_none_tab_recipe(self):
+        tab = self.window.findChild(QTabWidget, "tab_root")
+        tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
+        tab_2.tabBar().hide()
 
     #set window button events
     def setup_combo_box(self):
@@ -80,6 +92,7 @@ class Mainwindow:
         InterfaceInteraction.setting_events(self)
 
         self.display_none_all_tabs()
+        self.display_none_tab_recipe()
         self.window.tab_root.setCurrentIndex(TabKind.STORAGE_STATUS.value)
 
         self.setup_combo_box()
@@ -120,6 +133,12 @@ class Mainwindow:
     def change_tab(self, tab_widget, tab_kind):
         tab_widget.setCurrentIndex(tab_kind.value)
         print(f"Changed tab to {tab_kind.value} ({tab_kind.name})")
+
+    def change_tab_recipe(self, tab_kind):
+        tab = self.window.findChild(QTabWidget, "tab_root")
+        tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
+        tab_2.setCurrentIndex(tab_kind.value)
+
 
     # TODO: add validation, insert error handling
     def create_ref(self):
@@ -163,6 +182,37 @@ class Mainwindow:
             self.anim.setStartValue(start_hight)
             self.anim.setEndValue(end_hight)
             self.anim.start()
+
+    def popup_animation_from_point(self, widget, start_x, start_y):
+        widget = self.window.findChild(QGroupBox, f"{widget}")
+
+        if not widget:
+            print("위젯이 없습니다.")
+            return
+
+        widget.setVisible(True)
+        end_rect = widget.geometry()
+        start_rect = QRect(start_x, start_y, 27, 1)
+
+        widget.setGeometry(start_rect)
+
+        anim = QPropertyAnimation(widget, b"geometry")
+        anim.setDuration(300)
+        anim.setStartValue(start_rect)
+        anim.setEndValue(end_rect)
+        anim.start()
+        widget._popup_anim = anim
+
+    def toggle_button_by_lineedit(self):
+        lineedit = self.window.findChild(QLineEdit, "recipe_search_box")
+        button = self.window.findChild(QPushButton, "X_recipe_btn")
+        if lineedit and button:
+            if lineedit.text().strip():
+                button.setVisible(True)
+            else:
+                button.setVisible(False)
+
+
 
     def ref_get_all(self):
         from interface.ref_card import RefCard
