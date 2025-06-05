@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 
 from interface.interface_main import FoodType, OrderingType
 
+
 def setup_ui(tool_btn, food_type, callback_func=None):
     combo_box = FocusComboBox(food_type=food_type, callback_func=callback_func)
 
@@ -64,4 +65,4 @@ class FocusComboBox(QComboBox):
 
     def on_combo_changed(self):
         self.setVisible(False)
-        self.callback_func( self.food_type, self.currentText())
+        self.callback_func(self.food_type, self.currentText())

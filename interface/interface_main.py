@@ -32,10 +32,12 @@ from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 
+
 class OrderingType(Enum):
     LATEST = "등록 최신순"
     OLDEST = "등록 오래된순"
     EXPIRING_SOON = "소비기한 임박순"
+
 
 class FoodType(Enum):
     FRUIT_VEGETABLE = "과일 & 채소"
@@ -186,12 +188,22 @@ class Mainwindow:
         self.close_add_ref_modal(only_clear=True)
 
     def draw_all_ref_cards(self, is_only_favorite=False):
-        self.draw_ref_cards(FoodType.MEAT, is_only_favorite, ordering=OrderingType.LATEST)
-        self.draw_ref_cards(FoodType.SEA_FOOD, is_only_favorite, ordering=OrderingType.LATEST)
-        self.draw_ref_cards(FoodType.FRUIT_VEGETABLE, is_only_favorite, ordering=OrderingType.LATEST)
-        self.draw_ref_cards(FoodType.OTHER, is_only_favorite, ordering=OrderingType.LATEST)
+        self.draw_ref_cards(
+            FoodType.MEAT, is_only_favorite, ordering=OrderingType.LATEST
+        )
+        self.draw_ref_cards(
+            FoodType.SEA_FOOD, is_only_favorite, ordering=OrderingType.LATEST
+        )
+        self.draw_ref_cards(
+            FoodType.FRUIT_VEGETABLE, is_only_favorite, ordering=OrderingType.LATEST
+        )
+        self.draw_ref_cards(
+            FoodType.OTHER, is_only_favorite, ordering=OrderingType.LATEST
+        )
 
-    def draw_ref_cards(self, food_type: FoodType, is_only_favorite=False, ordering=OrderingType.LATEST):
+    def draw_ref_cards(
+        self, food_type: FoodType, is_only_favorite=False, ordering=OrderingType.LATEST
+    ):
         ref_cards = self.get_ref_cards_by_food_type(food_type)
 
         if not ref_cards:
@@ -205,7 +217,9 @@ class Mainwindow:
             case OrderingType.LATEST:
                 ref_cards = sorted(ref_cards, key=lambda x: x.ref_data.created_at)
             case OrderingType.OLDEST:
-                ref_cards = sorted(ref_cards, key=lambda x: x.ref_data.created_at, reverse=True)
+                ref_cards = sorted(
+                    ref_cards, key=lambda x: x.ref_data.created_at, reverse=True
+                )
             case OrderingType.EXPIRING_SOON:
                 ref_cards = sorted(ref_cards, key=lambda x: x.ref_data.Expiration_date)
             case _:
@@ -250,10 +264,26 @@ class Mainwindow:
     def setup_sort_btn(self):
         from .sort_combo_box import setup_ui
 
-        setup_ui(self.window.meat_sort_btn, FoodType.MEAT, callback_func=self.get_ordering_type)
-        setup_ui(self.window.sea_food_sort_btn, FoodType.SEA_FOOD, callback_func=self.get_ordering_type)
-        setup_ui(self.window.fruit_vegetable_sort_btn, FoodType.FRUIT_VEGETABLE, callback_func=self.get_ordering_type)
-        setup_ui(self.window.other_sort_btn, FoodType.OTHER, callback_func=self.get_ordering_type)
+        setup_ui(
+            self.window.meat_sort_btn,
+            FoodType.MEAT,
+            callback_func=self.get_ordering_type,
+        )
+        setup_ui(
+            self.window.sea_food_sort_btn,
+            FoodType.SEA_FOOD,
+            callback_func=self.get_ordering_type,
+        )
+        setup_ui(
+            self.window.fruit_vegetable_sort_btn,
+            FoodType.FRUIT_VEGETABLE,
+            callback_func=self.get_ordering_type,
+        )
+        setup_ui(
+            self.window.other_sort_btn,
+            FoodType.OTHER,
+            callback_func=self.get_ordering_type,
+        )
 
     def animation_search_box(self, search_box_name):
         search_box = self.window.findChild(QFrame, f"{search_box_name}")
@@ -357,4 +387,8 @@ class Mainwindow:
                 print("Unknown ordering type, using default (latest)")
                 ordering_type = OrderingType.LATEST
 
-        self.draw_ref_cards(food_type=food_type, is_only_favorite=self.is_show_only_favorite, ordering=ordering_type)
+        self.draw_ref_cards(
+            food_type=food_type,
+            is_only_favorite=self.is_show_only_favorite,
+            ordering=ordering_type,
+        )
