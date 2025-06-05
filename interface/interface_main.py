@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QGroupBox,
+    QMessageBox,
 )
 from PySide6.QtCore import (
     QFile,
@@ -181,7 +182,7 @@ class Mainwindow:
             Food_type=food_type,
         )
 
-        ref_card = RefCard(new_ref)
+        ref_card = RefCard(new_ref, delete_callback=self.delete_ref)
         self.all_ref_cards.append(ref_card)
         self.draw_ref_cards(food_type=FoodType(food_type), ordering=OrderingType.LATEST)
 
@@ -255,7 +256,7 @@ class Mainwindow:
         ref_cards = []
         for i in self.all_ref_cards:
             if i.ref_data.Food_type == food_type.value:
-                card = RefCard(i.ref_data)
+                card = RefCard(i.ref_data, delete_callback=self.delete_ref)
 
                 ref_cards.append(card)
 
@@ -344,7 +345,7 @@ class Mainwindow:
 
         ref_cards = []
         for i in refs:
-            card = RefCard(i)
+            card = RefCard(i, delete_callback=self.delete_ref)
             ref_cards.append(card)
 
         self.all_ref_cards = ref_cards
@@ -392,3 +393,17 @@ class Mainwindow:
             is_only_favorite=self.is_show_only_favorite,
             ordering=ordering_type,
         )
+
+    def delete_ref(self, ref_id: int):
+        result = QMessageBox.question(
+            None, "재료 삭제", "정말로 이 재료를 삭제하시겠습니까?"
+        )
+        if result == QMessageBox.StandardButton.Yes:
+            if cs_db.Database.delete(ref_id):
+                self.all_ref_cards = [
+                    i for i in self.all_ref_cards if i.ref_data.id != ref_id
+                ]
+                self.draw_all_ref_cards(is_only_favorite=self.is_show_only_favorite)
+                print(f"Deleted ref with id: {ref_id}")
+            else:
+                print(f"Failed to delete ref with id: {ref_id}")

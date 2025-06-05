@@ -14,9 +14,10 @@ from cold_storage import db as cs_db
 
 
 class RefCard(QFrame):
-    def __init__(self, ref):
+    def __init__(self, ref, delete_callback=None):
         super().__init__()
         self.ref_data = ref
+        self.delete_callback = delete_callback
         self.setup_ui()
         self.setup_style()
 
@@ -96,6 +97,8 @@ class RefCard(QFrame):
         """
         )
 
+        delete_btn.clicked.connect(self.delete)
+
         action_layout.addWidget(edit_btn)
         action_layout.addWidget(delete_btn)
 
@@ -103,6 +106,9 @@ class RefCard(QFrame):
         main_layout.addLayout(info_layout)
         main_layout.addStretch()
         main_layout.addLayout(action_layout)
+
+    def delete(self):
+        self.delete_callback(self.ref_data.id)
 
     def create_info_row(self, label_text, value_text):
         layout = QHBoxLayout()

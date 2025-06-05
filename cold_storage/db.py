@@ -50,15 +50,19 @@ class Database:
         connection.commit()
         return cursor.lastrowid
 
-    def data_delete(self, Food_name):
+    @classmethod
+    def delete(cls, ref_id: int):
         # 데이터 삭제
         cursor.execute(
             """
-            DELETE FROM Ref WHERE Food_name = ?
-        """,
-            (Food_name,),
+            DELETE FROM Ref WHERE id = ?
+            """,
+            (ref_id,),
         )
+
         connection.commit()
+
+        return cursor.rowcount > 0
 
     def data_edit_name(self, Food_name, New_Food_name):
         # 식품 이름 데이터 수정
