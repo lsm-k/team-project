@@ -30,7 +30,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
-
+from interface.ref_card import RefCard
 
 class FoodType(Enum):
     FRUIT_VEGETABLE = "과일 & 채소"
@@ -39,9 +39,14 @@ class FoodType(Enum):
     OTHER = "기타"
 
 class Mainwindow:
+    # UIs
     window = None
     add_ref_modal = None
     search_manage_ref_modal = None
+
+
+    # Datas
+    all_ref_cards = []
 
     def load_ui(self, file_name):
         ui_file = QFile(os.path.join(os.path.dirname(__file__), f"{file_name}.ui"))
@@ -98,8 +103,11 @@ class Mainwindow:
         self.setup_combo_box()
         self.setup_sort_btn()
 
-        self.ref_get_all()
         self.close_add_ref_modal()
+
+        self.all_ref_card = self.get_all_ref_cards()
+
+        self.draw_all_ref_cards()
 
         self.window.show()
 
@@ -149,7 +157,66 @@ class Mainwindow:
         food_type = self.add_ref_modal.type_combo_box.currentText()
         print(f"Creating ref: {food_name}, {amount}, {expiration_date}, {food_type}")
 
-        cs_db.Database.data_insert(food_name, amount, expiration_date, food_type)
+        lastrow_id = cs_db.Database.data_insert(food_name, amount, expiration_date, food_type)
+
+        new_ref = cs_db.Ref(id=lastrow_id, Food_name=food_name, Amount=amount, Expiration_date=expiration_date, Food_type=food_type)
+
+        ref_card = RefCard(new_ref)
+        self.all_ref_cards.append(ref_card)
+        self.draw_ref_cards(food_type=FoodType(food_type))
+
+        self.close_add_ref_modal(only_clear=True)
+
+    def draw_all_ref_cards(self):
+        self.draw_ref_cards(FoodType.MEAT)
+        self.draw_ref_cards(FoodType.SEA_FOOD)
+        self.draw_ref_cards(FoodType.FRUIT_VEGETABLE)
+        self.draw_ref_cards(FoodType.OTHER)
+
+
+    def draw_ref_cards(self, food_type: FoodType):
+        ref_cards = self.get_ref_cards_by_food_type(food_type)
+
+        if not ref_cards:
+            print(f"{food_type.value}에 해당하는 재료가 없습니다.")
+            return
+
+        scroll_area_content = None
+        match food_type:
+            case FoodType.MEAT:
+                scroll_area_content = self.window.meat_scroll_area_content
+            case FoodType.SEA_FOOD:
+                scroll_area_content = self.window.sea_food_scroll_area_content
+            case FoodType.FRUIT_VEGETABLE:
+                scroll_area_content = self.window.fruit_vegetable_scroll_area_content
+            case FoodType.OTHER:
+                scroll_area_content = self.window.other_scroll_area_content
+
+        if not scroll_area_content:
+            print(f"{food_type.value} 스크롤 영역을 찾을 수 없습니다.")
+            return
+
+        layout = scroll_area_content.layout()
+
+        # remove origin ref cards
+        for i in scroll_area_content.findChildren(RefCard):
+            layout.removeWidget(i)
+            i.setParent(None)
+
+        # inser new ref cards
+        for i in ref_cards:
+            layout.insertWidget(2, i)
+
+
+    def get_ref_cards_by_food_type(self, food_type: FoodType):
+        ref_cards = []
+        for i in self.all_ref_cards:
+            if i.ref_data.Food_type == food_type.value:
+                card = RefCard(i.ref_data)
+
+                ref_cards.append(card)
+
+        return ref_cards
 
     def setup_sort_btn(self):
         from .sort_combo_box import setup_ui
@@ -215,21 +282,16 @@ class Mainwindow:
 
 
 
-    def ref_get_all(self):
-        from interface.ref_card import RefCard
-        from favorite_ref import db as favorite_db
-
+    def get_all_ref_cards(self):
         refs = cs_db.Database.get_all()
-        fav_ref_ids = []
-        for i in favorite_db.Database.get_all():
-            fav_ref_ids.append(i.ref_id)
 
+        ref_cards = []
         for i in refs:
             card = RefCard(i)
+            ref_cards.append(card)
 
-            if i.id in fav_ref_ids:
-                card.set_favorite(True)
-            self.window.meat_scroll_area_content.layout().insertWidget(2, card)
+        self.all_ref_cards = ref_cards
+
     def close_add_ref_modal(self, only_clear=False):
         self.add_ref_modal.name_line_edit.clear()
         self.add_ref_modal.amount_line_edit.clear()
