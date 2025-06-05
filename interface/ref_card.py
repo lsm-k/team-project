@@ -3,13 +3,12 @@ from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout,
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QPalette
 
-from favorite_ref import db as favorite_db
+from cold_storage import db as cs_db
 
 class RefCard(QFrame):
     def __init__(self, ref):
         super().__init__()
         self.ref_data = ref
-        self.is_favorite = False
         self.setup_ui()
         self.setup_style()
     
@@ -111,7 +110,7 @@ class RefCard(QFrame):
         return layout
     
     def update_favorite_button(self):
-        if self.is_favorite:
+        if self.ref_data.is_favorite:
             self.favorite_btn.setText("❤️")
             self.favorite_btn.setStyleSheet("""
                 QPushButton {
@@ -131,17 +130,18 @@ class RefCard(QFrame):
             """)
     
     def set_favorite(self, is_favorite: bool):
-        self.is_favorite = is_favorite
+        self.ref_data.is_favorite = is_favorite
         self.update_favorite_button()
+
     def toggle_favorite(self):
-        if self.is_favorite:
+        if self.ref_data.is_favorite:
             self.unfavorite(self.ref_data.id)
         else:
             self.favorite(self.ref_data.id)
 
-        self.is_favorite = not self.is_favorite
+        self.ref_data.is_favorite = not self.ref_data.is_favorite
         self.update_favorite_button()
-        print(f"{self.ref_data.Food_name} 즐겨찾기: {self.is_favorite}")
+        print(f"{self.ref_data.Food_name} 즐겨찾기: {self.ref_data.is_favorite}")
     
     def setup_style(self):
         self.setFrameStyle(QFrame.Box)
@@ -161,7 +161,7 @@ class RefCard(QFrame):
         # self.setFixedHeight(200)
 
     def favorite(self, id: int):
-        favorite_db.Database.create(id)
+        cs_db.Database.update_favorite(self.ref_data.id, True)
 
     def unfavorite(self, id: int):
-        favorite_db.Database.delete(id)
+        cs_db.Database.update_favorite(self.ref_data.id, False)

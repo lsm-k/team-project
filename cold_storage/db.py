@@ -14,7 +14,9 @@ class Ref:
     Food_name: str = ""
     Amount: int = 0
     Expiration_date: str = ""
-    Food_type: str = "기타"
+    Food_type: str = ""
+    is_favorite: bool = False
+    created_at: str = ""
 
 
 class Database:
@@ -27,7 +29,9 @@ class Database:
                 Food_name TEXT NOT NULL,
                 Amount INTEGER NOT NULL,
                 Expiration_date TEXT NOT NULL,
-                Food_type TEXT NOT NULL
+                Food_type TEXT NOT NULL,
+                is_favorite INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL DEFAULT (datetime('now'))
             )
         """
         )
@@ -104,3 +108,12 @@ class Database:
         """
         cursor.execute(sql)
         return [Ref(**row) for row in cursor.fetchall()]
+
+    @classmethod
+    def update_favorite(cls, ref_id: int, is_favorite: bool):
+        sql = """
+        UPDATE Ref SET is_favorite = ? WHERE id = ?
+        """
+        cursor.execute(sql, (1 if is_favorite else 0, ref_id))
+        connection.commit()
+        return cursor.rowcount > 0
