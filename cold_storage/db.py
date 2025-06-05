@@ -44,6 +44,7 @@ class Database:
             (Food_name, Amount, Expiration_date, Food_type),
         )
         connection.commit()
+        return cursor.lastrowid
 
     def data_delete(self, Food_name):
         # 데이터 삭제
