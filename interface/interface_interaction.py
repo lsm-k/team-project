@@ -74,6 +74,9 @@ class InterfaceInteraction:
         # ref add btns
         self.window.ref_add_self_btn.clicked.connect(self.show_add_ref_modal)
 
+        self.add_ref_modal.create_btn.accepted.connect(self.create_ref)
+        self.add_ref_modal.create_btn.rejected.connect(self.close_add_ref_modal)
+
         self.window.open_search_manage_modal_btn.clicked.connect(
             self.show_search_manage_ref_modal
         )

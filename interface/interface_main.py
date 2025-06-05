@@ -22,6 +22,7 @@ from PySide6.QtCore import (
     QUrl,
     QPropertyAnimation,
     QRect,
+    QDate
 )
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtGui import QDrag, QPixmap, QPainter
@@ -98,6 +99,7 @@ class Mainwindow:
         self.setup_sort_btn()
 
         self.ref_get_all()
+        self.close_add_ref_modal()
 
         self.window.show()
 
@@ -228,3 +230,11 @@ class Mainwindow:
             if i.id in fav_ref_ids:
                 card.set_favorite(True)
             self.window.meat_scroll_area_content.layout().insertWidget(2, card)
+    def close_add_ref_modal(self, only_clear=False):
+        self.add_ref_modal.name_line_edit.clear()
+        self.add_ref_modal.amount_line_edit.clear()
+        self.add_ref_modal.expiration_duration_date_edit.setDate(QDate.currentDate())
+        self.add_ref_modal.type_combo_box.setCurrentIndex(0)
+
+        if not only_clear:
+            self.add_ref_modal.close()
