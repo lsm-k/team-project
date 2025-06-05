@@ -44,6 +44,8 @@ class Mainwindow:
     add_ref_modal = None
     search_manage_ref_modal = None
 
+    # Status
+    is_show_only_favorite = False
 
     # Datas
     all_ref_cards = []
@@ -167,15 +169,17 @@ class Mainwindow:
 
         self.close_add_ref_modal(only_clear=True)
 
-    def draw_all_ref_cards(self):
-        self.draw_ref_cards(FoodType.MEAT)
-        self.draw_ref_cards(FoodType.SEA_FOOD)
-        self.draw_ref_cards(FoodType.FRUIT_VEGETABLE)
-        self.draw_ref_cards(FoodType.OTHER)
+    def draw_all_ref_cards(self, is_only_favorite=False):
+        self.draw_ref_cards(FoodType.MEAT, is_only_favorite)
+        self.draw_ref_cards(FoodType.SEA_FOOD, is_only_favorite)
+        self.draw_ref_cards(FoodType.FRUIT_VEGETABLE, is_only_favorite)
+        self.draw_ref_cards(FoodType.OTHER, is_only_favorite)
 
-
-    def draw_ref_cards(self, food_type: FoodType):
+    def draw_ref_cards(self, food_type: FoodType, is_only_favorite=False):
         ref_cards = self.get_ref_cards_by_food_type(food_type)
+
+        if is_only_favorite:
+            ref_cards = [i for i in ref_cards if i.ref_data.is_favorite == True]
 
         if not ref_cards:
             print(f"{food_type.value}에 해당하는 재료가 없습니다.")
@@ -291,6 +295,20 @@ class Mainwindow:
             ref_cards.append(card)
 
         self.all_ref_cards = ref_cards
+
+    def show_only_favorite(self):
+        if self.is_show_only_favorite:
+            self.is_show_only_favorite = False
+            self.window.fav_ch_btn.setText("즐겨찾는 재료")
+
+        else:
+            self.is_show_only_favorite = True
+            self.window.fav_ch_btn.setText("X")
+
+        if self.is_show_only_favorite:
+            self.draw_all_ref_cards(is_only_favorite=True)
+        else:
+            self.draw_all_ref_cards(is_only_favorite=False)
 
     def close_add_ref_modal(self, only_clear=False):
         self.add_ref_modal.name_line_edit.clear()

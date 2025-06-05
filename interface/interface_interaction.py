@@ -67,9 +67,7 @@ class InterfaceInteraction:
             lambda: self.change_tab(self.window.tab_root, TabKind.SETTING)
         )
 
-        # self.window.fav_ch_btn.clicked.connect(
-        #     lambda: self.change_tab(self.window.ref_tab_widget, TabKind_nomal.NOMAL)
-        # )
+        self.window.fav_ch_btn.clicked.connect(self.show_only_favorite)
 
         # ref add btns
         self.window.ref_add_self_btn.clicked.connect(self.show_add_ref_modal)
