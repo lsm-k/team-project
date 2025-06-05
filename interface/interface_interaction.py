@@ -12,10 +12,10 @@ from PySide6.QtWidgets import (
     QPushButton,
 )
 from PySide6.QtCore import (
-    QFile, 
-    Qt, 
-    QMimeData, 
-    QCoreApplication, 
+    QFile,
+    Qt,
+    QMimeData,
+    QCoreApplication,
     QUrl,
     QPropertyAnimation,
     QRect,
@@ -32,6 +32,7 @@ class TabKind(Enum):
     RECIPE = 1
     HELP = 2
     SETTING = 3
+
 
 class RecipeTabKind(Enum):
     MAIN = 0
@@ -81,7 +82,9 @@ class InterfaceInteraction:
 
         self.search_manage_ref_modal.search_btn.clicked.connect(self.search_ref_manage)
 
-        self.search_manage_ref_modal.name_edit.returnPressed.connect(self.search_ref_manage)        #엔터키 누르면 검색
+        self.search_manage_ref_modal.name_edit.returnPressed.connect(
+            self.search_ref_manage
+        )  # 엔터키 누르면 검색
 
         # self.window.show_search_box_btn_1.clicked.connect(
         #     lambda: self.animation_search_box("search_frame_1")
@@ -99,17 +102,21 @@ class InterfaceInteraction:
         #     lambda: self.animation_search_box("search_frame_4")
         # )
 
-        for i in range (1,5):
-            search_frame_num = self.window.findChild(QPushButton, f"show_search_box_btn_{i}")
+        for i in range(1, 5):
+            search_frame_num = self.window.findChild(
+                QPushButton, f"show_search_box_btn_{i}"
+            )
             if search_frame_num:
                 search_frame_num.clicked.connect(
-                    lambda checked = False, num=i: self.animation_search_box(f"search_frame_{num}")
+                    lambda checked=False, num=i: self.animation_search_box(
+                        f"search_frame_{num}"
+                    )
                 )
-        
+
         self.window.recipe_meat_btn.clicked.connect(
-            lambda :self.change_tab_recipe(RecipeTabKind.BEEF)
+            lambda: self.change_tab_recipe(RecipeTabKind.BEEF)
         )
 
         self.window.recipe_meat_btn.clicked.connect(
-            lambda : self.popup_animation_from_point("test_group_box", 35, 10)
+            lambda: self.popup_animation_from_point("test_group_box", 35, 10)
         )

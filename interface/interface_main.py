@@ -15,14 +15,14 @@ from PySide6.QtWidgets import (
     QGroupBox,
 )
 from PySide6.QtCore import (
-    QFile, 
-    Qt, 
-    QMimeData, 
-    QCoreApplication, 
+    QFile,
+    Qt,
+    QMimeData,
+    QCoreApplication,
     QUrl,
     QPropertyAnimation,
     QRect,
-    QDate
+    QDate,
 )
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtGui import QDrag, QPixmap, QPainter
@@ -32,11 +32,13 @@ from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 
+
 class FoodType(Enum):
     FRUIT_VEGETABLE = "과일 & 채소"
     MEAT = "육류"
     SEA_FOOD = "어류"
     OTHER = "기타"
+
 
 class Mainwindow:
     # UIs
@@ -66,9 +68,10 @@ class Mainwindow:
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
             if frame:
                 frame.setVisible(False)
-        self.window.recipe_search_box.textChanged.connect(self.toggle_button_by_lineedit)
+        self.window.recipe_search_box.textChanged.connect(
+            self.toggle_button_by_lineedit
+        )
         self.toggle_button_by_lineedit()
-
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -94,7 +97,7 @@ class Mainwindow:
 
         self.setup_ui()
         self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.search_manage_ref_modal.setWindowTitle('재료 보관방법 검색창')
+        self.search_manage_ref_modal.setWindowTitle("재료 보관방법 검색창")
 
         InterfaceInteraction.setting_events(self)
 
@@ -136,10 +139,12 @@ class Mainwindow:
     def search_ref_manage(self):
         search_text = self.search_manage_ref_modal.name_edit.text() + " 보관 방법"
 
-        self.search_manage_ref_modal.youtube_view.load(QUrl(f"https://www.youtube.com/results?search_query={search_text}"))
-        self.search_manage_ref_modal.google_view.load(QUrl(f"https://www.google.com/search?q={search_text}"))
-
-
+        self.search_manage_ref_modal.youtube_view.load(
+            QUrl(f"https://www.youtube.com/results?search_query={search_text}")
+        )
+        self.search_manage_ref_modal.google_view.load(
+            QUrl(f"https://www.google.com/search?q={search_text}")
+        )
 
     def change_tab(self, tab_widget, tab_kind):
         tab_widget.setCurrentIndex(tab_kind.value)
@@ -150,7 +155,6 @@ class Mainwindow:
         tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
         tab_2.setCurrentIndex(tab_kind.value)
 
-
     # TODO: add validation, insert error handling
     def create_ref(self):
         food_name = self.add_ref_modal.name_line_edit.text()
@@ -159,9 +163,17 @@ class Mainwindow:
         food_type = self.add_ref_modal.type_combo_box.currentText()
         print(f"Creating ref: {food_name}, {amount}, {expiration_date}, {food_type}")
 
-        lastrow_id = cs_db.Database.data_insert(food_name, amount, expiration_date, food_type)
+        lastrow_id = cs_db.Database.data_insert(
+            food_name, amount, expiration_date, food_type
+        )
 
-        new_ref = cs_db.Ref(id=lastrow_id, Food_name=food_name, Amount=amount, Expiration_date=expiration_date, Food_type=food_type)
+        new_ref = cs_db.Ref(
+            id=lastrow_id,
+            Food_name=food_name,
+            Amount=amount,
+            Expiration_date=expiration_date,
+            Food_type=food_type,
+        )
 
         ref_card = RefCard(new_ref)
         self.all_ref_cards.append(ref_card)
@@ -211,7 +223,6 @@ class Mainwindow:
         for i in ref_cards:
             layout.insertWidget(2, i)
 
-
     def get_ref_cards_by_food_type(self, food_type: FoodType):
         ref_cards = []
         for i in self.all_ref_cards:
@@ -248,7 +259,7 @@ class Mainwindow:
         else:
             search_box.setVisible(True)
             start_hight = search_box.maximumHeight()
-            end_hight = search_box.height() + 100  
+            end_hight = search_box.height() + 100
             self.anim = QPropertyAnimation(search_box, b"maximumHeight")
             self.anim.setDuration(300)
             self.anim.setStartValue(start_hight)
@@ -283,8 +294,6 @@ class Mainwindow:
                 button.setVisible(True)
             else:
                 button.setVisible(False)
-
-
 
     def get_all_ref_cards(self):
         refs = cs_db.Database.get_all()
