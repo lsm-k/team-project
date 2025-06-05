@@ -1,3 +1,5 @@
+from enum import Enum
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QComboBox
 from PySide6.QtWidgets import (
@@ -13,16 +15,14 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
 )
 
+from interface.interface_main import FoodType, OrderingType
 
-def setup_ui(tool_btn):
-    combo_box = FocusComboBox()
-    combo_box.addItems(
-        [
-            "등록 최신순",
-            "등록 오래된순",
-            "소비기한 임박순",
-        ]
-    )
+def setup_ui(tool_btn, food_type, callback_func=None):
+    combo_box = FocusComboBox(food_type=food_type, callback_func=callback_func)
+
+    lists = [i.value for i in OrderingType]
+    combo_box.addItems(lists)
+
     combo_box.setVisible(False)
     combo_box.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
@@ -33,8 +33,10 @@ from PySide6.QtCore import QTimer
 
 
 class FocusComboBox(QComboBox):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, food_type=FoodType, callback_func=None):
         super().__init__(parent)
+        self.food_type = food_type
+        self.callback_func = callback_func
         self.currentTextChanged.connect(self.on_combo_changed)
         self.setup_timer()
 
@@ -62,3 +64,4 @@ class FocusComboBox(QComboBox):
 
     def on_combo_changed(self):
         self.setVisible(False)
+        self.callback_func( self.food_type, self.currentText())
