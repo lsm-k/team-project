@@ -86,6 +86,8 @@ class Mainwindow:
         )
         self.toggle_button_by_lineedit()
 
+
+
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
         for i in range(0, tab_cnt):
@@ -127,7 +129,10 @@ class Mainwindow:
 
         self.draw_all_ref_cards()
 
-        self.add_meat_recipe_btns()
+        self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
+        self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
+        self.add_recipe_btns_by_type(FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea")
+        self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
 
         self.window.show()
 
@@ -197,7 +202,16 @@ class Mainwindow:
         self.close_add_ref_modal(only_clear=True)
 
         if food_type == FoodType.MEAT.value:
-            self.add_meat_recipe_btns()
+            self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
+
+        if food_type == FoodType.SEA_FOOD.value:
+            self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
+
+        if food_type == FoodType.FRUIT_VEGETABLE.value:
+            self.add_recipe_btns_by_type(FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea")
+            
+        if food_type == FoodType.OTHER.value:
+            self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
 
     def draw_all_ref_cards(self, is_only_favorite=False):
         self.draw_ref_cards(
@@ -330,6 +344,8 @@ class Mainwindow:
             return
 
         widget.setVisible(True)
+        widget.repaint()
+        QCoreApplication.processEvents()
         end_rect = widget.geometry()
         start_rect = QRect(start_x, start_y, 27, 1)
 
@@ -341,6 +357,10 @@ class Mainwindow:
         anim.setEndValue(end_rect)
         anim.start()
         widget._popup_anim = anim
+
+        def fix_geometry():
+            widget.setGeometry(end_rect)
+        anim.finished.connect(fix_geometry)
 
     def toggle_button_by_lineedit(self):
         lineedit = self.window.findChild(QLineEdit, "recipe_search_box")
@@ -357,33 +377,87 @@ class Mainwindow:
             lineedit.clear()
             self.toggle_button_by_lineedit()
 
-    def add_meat_recipe_btns(self):
+    # def add_meat_recipe_btns(self):
+    #     from cold_storage import db as cs_db
+    #     meat_names = [
+    #         ref.Food_name
+    #         for ref in cs_db.Database.get_all()
+    #         if ref.Food_type == "육류"
+    #     ]
+
+    #     find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
+    #     scroll_area = find_scroll_area.findChild(QScrollArea, "recipe_btn_scrollArea")
+    #     if not scroll_area:
+    #         print("스크롤 영역을 찾을 수 없습니다.")
+    #         return
+
+    #     content_widget = scroll_area.widget()
+    #     if not content_widget:
+    #         print("스크롤 영역의 컨텐츠 위젯을 찾을 수 없습니다.")
+    #         return
+
+    #     grid_layout = content_widget.layout()
+    #     if not isinstance(grid_layout, QGridLayout):
+    #         print("QGridLayout을 찾을 수 없습니다.")
+    #         return
+
+    #     grid_layout.setSpacing(0)
+    #     grid_layout.setContentsMargins(0, 0, 5, 0)
+
+    #     # 기존 위젯 모두 제거
+    #     while grid_layout.count():
+    #         item = grid_layout.takeAt(0)
+    #         widget = item.widget()
+    #         if widget is not None:
+    #             widget.setParent(None)
+    #             widget.deleteLater()
+
+    #     # 한 행에 5개씩 배치, 6개부터는 다음 행
+    #     max_per_row = 5
+    #     for idx, name in enumerate(meat_names):
+    #         btn_box = RecipeBtnBox(name)
+    #         row = idx % 2      
+    #         col = idx // 2     
+    #         grid_layout.addWidget(btn_box, row, col)
+
+    #     min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
+    #     min_width = max_per_row * min_btn_width
+    #     content_widget.setMinimumWidth(min_width)
+
+    #     scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+    #     scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def add_recipe_btns_by_type(self, food_type: FoodType, scroll_area_name: str):
         from cold_storage import db as cs_db
-        meat_names = [
+
+        # 1. 해당 타입의 이름만 추출
+        names = [
             ref.Food_name
             for ref in cs_db.Database.get_all()
-            if ref.Food_type == "육류"
+            if ref.Food_type == food_type.value
         ]
 
+        # 2. ScrollArea, 내부 위젯, QGridLayout 찾기
         find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
-        scroll_area = find_scroll_area.findChild(QScrollArea, "recipe_btn_scrollArea")
+        scroll_area = find_scroll_area.findChild(QScrollArea, scroll_area_name)
         if not scroll_area:
-            print("스크롤 영역을 찾을 수 없습니다.")
+            print(f"{scroll_area_name} 스크롤 영역을 찾을 수 없습니다.")
             return
 
         content_widget = scroll_area.widget()
         if not content_widget:
-            print("스크롤 영역의 컨텐츠 위젯을 찾을 수 없습니다.")
+            print(f"{scroll_area_name}의 컨텐츠 위젯을 찾을 수 없습니다.")
             return
 
         grid_layout = content_widget.layout()
         if not isinstance(grid_layout, QGridLayout):
-            print("QGridLayout을 찾을 수 없습니다.")
+            print(f"{scroll_area_name}의 QGridLayout을 찾을 수 없습니다.")
             return
 
         grid_layout.setSpacing(0)
         grid_layout.setContentsMargins(0, 0, 5, 0)
 
+        # 기존 위젯 모두 제거
         while grid_layout.count():
             item = grid_layout.takeAt(0)
             widget = item.widget()
@@ -391,8 +465,9 @@ class Mainwindow:
                 widget.setParent(None)
                 widget.deleteLater()
 
+        # 한 행에 5개씩 배치, 6개부터는 다음 행
         max_per_row = 5
-        for idx, name in enumerate(meat_names):
+        for idx, name in enumerate(names):
             btn_box = RecipeBtnBox(name)
             row = idx % 2      
             col = idx // 2     
@@ -475,6 +550,9 @@ class Mainwindow:
                 print(f"Deleted ref with id: {ref_id}")
 
                 # ★ 육류 재료가 삭제되었을 때 버튼 갱신
-                self.add_meat_recipe_btns()
+                self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
+                self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
+                self.add_recipe_btns_by_type(FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea")
+                self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
             else:
                 print(f"Failed to delete ref with id: {ref_id}")

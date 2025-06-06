@@ -1327,7 +1327,7 @@ color: rgb(255, 255, 255, 255);</string>
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="main_tab">
              <attribute name="title">
@@ -1384,7 +1384,7 @@ color: rgb(255, 255, 255, 255);</string>
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_8">
+                   <widget class="QPushButton" name="recipe_fishes_btn">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -1413,7 +1413,7 @@ color: rgb(255, 255, 255, 255);</string>
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_9">
+                   <widget class="QPushButton" name="recipe_vegetable_btn">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1454,7 +1454,7 @@ color: rgb(255, 255, 255, 255);</string>
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_11">
+                   <widget class="QPushButton" name="recipe_others_btn">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1698,6 +1698,9 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <height>0</height>
                       </size>
                      </property>
+                     <property name="styleSheet">
+                      <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                     </property>
                      <property name="verticalScrollBarPolicy">
                       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
                      </property>
@@ -1751,6 +1754,13 @@ background-color: rgb(255, 255, 255, 0);}</string>
                          </layout>
                         </widget>
                        </item>
+                       <item row="0" column="1">
+                        <widget class="QRadioButton" name="radioButton_11">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
                        <item row="0" column="0">
                         <widget class="QFrame" name="frame_9">
                          <property name="frameShape">
@@ -1782,8 +1792,8 @@ background-color: rgb(255, 255, 255, 0);}</string>
                          </layout>
                         </widget>
                        </item>
-                       <item row="0" column="1">
-                        <widget class="QRadioButton" name="radioButton_11">
+                       <item row="0" column="2">
+                        <widget class="QRadioButton" name="radioButton_12">
                          <property name="text">
                           <string>RadioButton</string>
                          </property>
@@ -1804,12 +1814,267 @@ background-color: rgb(255, 255, 255, 0);}</string>
              <attribute name="title">
               <string>fishes tab</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>12</number>
+              </property>
               <item>
-               <widget class="QGroupBox" name="test_group_box_2">
-                <property name="title">
-                 <string/>
+               <widget class="QFrame" name="fishes_tab_frame">
+                <property name="styleSheet">
+                 <string notr="true">QFrame#fishes_tab_frame{
+border-color: rgb(0, 0, 0);
+border-width: 1px;
+border-style: solid;
+border-radius: 35px;
+background-color: rgb(255, 255, 255, 0);}</string>
                 </property>
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_12">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_7" stretch="2,5">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <layout class="QHBoxLayout" name="recipe_info_layout_2">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_16">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <spacer name="horizontalSpacer_3">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>30</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_2">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>어류</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="return_fishes_tab_btn">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>30</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>8</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="text">
+                          <string>&lt;&lt;&lt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_5">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>400</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="QScrollArea" name="fish_btn_scrollArea">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="verticalScrollBarPolicy">
+                      <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+                     </property>
+                     <property name="sizeAdjustPolicy">
+                      <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+                     </property>
+                     <property name="widgetResizable">
+                      <bool>true</bool>
+                     </property>
+                     <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>489</width>
+                        <height>68</height>
+                       </rect>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_5">
+                       <item row="0" column="2">
+                        <widget class="QRadioButton" name="radioButton_16">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="1">
+                        <widget class="QRadioButton" name="radioButton_37">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="2">
+                        <widget class="QRadioButton" name="radioButton_38">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QRadioButton" name="radioButton_14">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QFrame" name="frame_11">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_30">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="radioButton_13">
+                            <property name="text">
+                             <string>RadioButton</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QFrame" name="frame_12">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_31">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="radioButton_15">
+                            <property name="text">
+                             <string>RadioButton</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item row="0" column="3">
+                        <widget class="QRadioButton" name="radioButton_39">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -1819,11 +2084,245 @@ background-color: rgb(255, 255, 255, 0);}</string>
               <string>vegetable tab</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>12</number>
+              </property>
               <item>
-               <widget class="QGroupBox" name="test_group_box_3">
-                <property name="title">
-                 <string/>
+               <widget class="QFrame" name="vegetable_tab_frame">
+                <property name="styleSheet">
+                 <string notr="true">QFrame#vegetable_tab_frame{
+border-color: rgb(0, 0, 0);
+border-width: 1px;
+border-style: solid;
+border-radius: 35px;
+background-color: rgb(255, 255, 255, 0);}</string>
                 </property>
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_10" stretch="2,5">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <layout class="QHBoxLayout" name="recipe_info_layout_3">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_17">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <spacer name="horizontalSpacer_6">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>30</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_3">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>채소 &amp; 과일</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="return_vegetable_tab_btn">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>30</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>8</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="text">
+                          <string>&lt;&lt;&lt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_12">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>400</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="QScrollArea" name="vegetable_btn_scrollArea">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="verticalScrollBarPolicy">
+                      <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+                     </property>
+                     <property name="sizeAdjustPolicy">
+                      <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+                     </property>
+                     <property name="widgetResizable">
+                      <bool>true</bool>
+                     </property>
+                     <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>489</width>
+                        <height>68</height>
+                       </rect>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_6">
+                       <item row="1" column="0">
+                        <widget class="QFrame" name="frame_13">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_32">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="radioButton_17">
+                            <property name="text">
+                             <string>RadioButton</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QRadioButton" name="radioButton_18">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QFrame" name="frame_14">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_33">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="radioButton_19">
+                            <property name="text">
+                             <string>RadioButton</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item row="0" column="2">
+                        <widget class="QRadioButton" name="radioButton_20">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -1832,12 +2331,246 @@ background-color: rgb(255, 255, 255, 0);}</string>
              <attribute name="title">
               <string>others tab</string>
              </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <layout class="QVBoxLayout" name="verticalLayout_18">
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>12</number>
+              </property>
               <item>
-               <widget class="QGroupBox" name="test_group_box_4">
-                <property name="title">
-                 <string/>
+               <widget class="QFrame" name="others_tab_frame">
+                <property name="styleSheet">
+                 <string notr="true">QFrame#others_tab_frame{
+border-color: rgb(0, 0, 0);
+border-width: 1px;
+border-style: solid;
+border-radius: 35px;
+background-color: rgb(255, 255, 255, 0);}</string>
                 </property>
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_41">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_17" stretch="2,5">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <layout class="QHBoxLayout" name="recipe_info_layout_7">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_42">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <spacer name="horizontalSpacer_29">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>30</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_7">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>기타</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="return_others_tab_btn">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>30</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>8</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="text">
+                          <string>&lt;&lt;&lt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_30">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>400</width>
+                           <height>17</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="QScrollArea" name="other_btn_scrollArea">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="verticalScrollBarPolicy">
+                      <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+                     </property>
+                     <property name="sizeAdjustPolicy">
+                      <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+                     </property>
+                     <property name="widgetResizable">
+                      <bool>true</bool>
+                     </property>
+                     <widget class="QWidget" name="scrollAreaWidgetContents_7">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>489</width>
+                        <height>68</height>
+                       </rect>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_10">
+                       <item row="1" column="0">
+                        <widget class="QFrame" name="frame_21">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_43">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="radioButton_33">
+                            <property name="text">
+                             <string>RadioButton</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QRadioButton" name="radioButton_34">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QFrame" name="frame_22">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_44">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="radioButton_35">
+                            <property name="text">
+                             <string>RadioButton</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item row="0" column="2">
+                        <widget class="QRadioButton" name="radioButton_36">
+                         <property name="text">
+                          <string>RadioButton</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
