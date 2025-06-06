@@ -85,7 +85,7 @@ class Database:
         connection.commit()
 
     def data_edit_expiration(self, Food_name, Expiration_date):
-        # 유통기한한 데이터 수정
+        # 유통기한 데이터 수정
         cursor.execute(
             """
             UPDATE Ref SET Expiration_date = ? WHERE Food_name = ?
@@ -112,6 +112,26 @@ class Database:
         """
         cursor.execute(sql)
         return [Ref(**row) for row in cursor.fetchall()]
+    
+    @classmethod
+    def get_food_name(cls):
+        # 식품 이름 전부 조회
+        sql = """
+        SELECT Food_name FROM Ref
+        """
+
+        cursor.execute(sql)
+        return [row[0] for row in cursor.fetchall()]
+    
+    @classmethod
+    def get_food_name(cls):
+        # 식품 이름 전부 조회
+        sql = """
+        SELECT Food_name FROM Ref
+        """
+
+        cursor.execute(sql)
+        return [row[0] for row in cursor.fetchall()]
 
     @classmethod
     def update_favorite(cls, ref_id: int, is_favorite: bool):

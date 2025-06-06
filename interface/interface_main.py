@@ -14,6 +14,9 @@ from PySide6.QtWidgets import (
     QPushButton,
     QGroupBox,
     QMessageBox,
+    QVBoxLayout,
+    QScrollArea,
+    QHBoxLayout,
 )
 from PySide6.QtCore import (
     QFile,
@@ -32,6 +35,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
+from interface.recipe_btn_box import RecipeBtnBox
 
 
 class OrderingType(Enum):
@@ -71,10 +75,12 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
+        
         for i in range(1, 5):
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
             if frame:
                 frame.setVisible(False)
+        
         self.window.recipe_search_box.textChanged.connect(
             self.toggle_button_by_lineedit
         )
@@ -117,9 +123,11 @@ class Mainwindow:
 
         self.close_add_ref_modal()
 
-        self.all_ref_card = self.get_all_ref_cards()
+        self.all_ref_card = self.ref_get_all()
 
         self.draw_all_ref_cards()
+
+        self.add_meat_recipe_btns()
 
         self.window.show()
 
@@ -187,6 +195,9 @@ class Mainwindow:
         self.draw_ref_cards(food_type=FoodType(food_type), ordering=OrderingType.LATEST)
 
         self.close_add_ref_modal(only_clear=True)
+
+        if food_type == FoodType.MEAT.value:
+            self.add_meat_recipe_btns()
 
     def draw_all_ref_cards(self, is_only_favorite=False):
         self.draw_ref_cards(
@@ -312,7 +323,7 @@ class Mainwindow:
             self.anim.start()
 
     def popup_animation_from_point(self, widget, start_x, start_y):
-        widget = self.window.findChild(QGroupBox, f"{widget}")
+        widget = self.window.findChild(QFrame, f"{widget}")
 
         if not widget:
             print("위젯이 없습니다.")
@@ -340,7 +351,64 @@ class Mainwindow:
             else:
                 button.setVisible(False)
 
-    def get_all_ref_cards(self):
+    def clear_line_edit(self):
+        lineedit = self.window.findChild(QLineEdit, "recipe_search_box")
+        if lineedit:
+            lineedit.clear()
+            self.toggle_button_by_lineedit()
+
+    def add_meat_recipe_btns(self):
+        from cold_storage import db as cs_db
+        meat_names = [
+            ref.Food_name
+            for ref in cs_db.Database.get_all()
+            if ref.Food_type == "육류"
+        ]
+
+        find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
+        scroll_area = find_scroll_area.findChild(QScrollArea, "recipe_btn_scrollArea")
+        if not scroll_area:
+            print("스크롤 영역을 찾을 수 없습니다.")
+            return
+
+        content_widget = scroll_area.widget()
+        if not content_widget:
+            print("스크롤 영역의 컨텐츠 위젯을 찾을 수 없습니다.")
+            return
+
+        grid_layout = content_widget.layout()
+        if not isinstance(grid_layout, QGridLayout):
+            print("QGridLayout을 찾을 수 없습니다.")
+            return
+
+        grid_layout.setSpacing(0)
+        grid_layout.setContentsMargins(0, 0, 5, 0)
+
+        while grid_layout.count():
+            item = grid_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        max_per_row = 5
+        for idx, name in enumerate(meat_names):
+            btn_box = RecipeBtnBox(name)
+            row = idx % 2      
+            col = idx // 2     
+            grid_layout.addWidget(btn_box, row, col)
+
+        min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
+        min_width = max_per_row * min_btn_width
+        content_widget.setMinimumWidth(min_width)
+
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def ref_get_all(self):
+        from interface.ref_card import RefCard
+        from cold_storage import db as favorite_db
+
         refs = cs_db.Database.get_all()
 
         ref_cards = []
@@ -405,5 +473,8 @@ class Mainwindow:
                 ]
                 self.draw_all_ref_cards(is_only_favorite=self.is_show_only_favorite)
                 print(f"Deleted ref with id: {ref_id}")
+
+                # ★ 육류 재료가 삭제되었을 때 버튼 갱신
+                self.add_meat_recipe_btns()
             else:
                 print(f"Failed to delete ref with id: {ref_id}")
