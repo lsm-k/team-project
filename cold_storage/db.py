@@ -64,6 +64,24 @@ class Database:
 
         return cursor.rowcount > 0
 
+    @classmethod
+    def update(
+        cls,
+        ref_id: int,
+        Food_name: str,
+        Amount: int,
+        Expiration_date: str,
+        Food_type: str,
+    ):
+        cursor.execute(
+            """
+            UPDATE Ref SET Food_name = ?, Amount = ?, Expiration_date = ?, Food_type = ? WHERE id = ?
+        """,
+            (Food_name, Amount, Expiration_date, Food_type, ref_id),
+        )
+        connection.commit()
+        return cursor.rowcount > 0
+
     def data_edit_name(self, Food_name, New_Food_name):
         # 식품 이름 데이터 수정
         cursor.execute(
@@ -112,7 +130,7 @@ class Database:
         """
         cursor.execute(sql)
         return [Ref(**row) for row in cursor.fetchall()]
-    
+
     @classmethod
     def get_food_name(cls):
         # 식품 이름 전부 조회
@@ -122,7 +140,7 @@ class Database:
 
         cursor.execute(sql)
         return [row[0] for row in cursor.fetchall()]
-    
+
     @classmethod
     def get_food_name(cls):
         # 식품 이름 전부 조회

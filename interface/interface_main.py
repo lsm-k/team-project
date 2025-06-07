@@ -51,6 +51,11 @@ class FoodType(Enum):
     OTHER = "기타"
 
 
+class RefModalType(Enum):
+    ADD = "add"
+    EDIT = "edit"
+
+
 class Mainwindow:
     # UIs
     window = None
@@ -59,6 +64,9 @@ class Mainwindow:
 
     # Status
     is_show_only_favorite = False
+
+    ref_modal_type = RefModalType.ADD
+    now_edit_ref_id = None
 
     # Datas
     all_ref_cards = []
@@ -123,7 +131,7 @@ class Mainwindow:
         self.setup_combo_box()
         self.setup_sort_btn()
 
-        self.close_add_ref_modal()
+        self.clear_ref_modal()
 
         self.all_ref_card = self.ref_get_all()
 
@@ -139,6 +147,26 @@ class Mainwindow:
         sys.exit(app.exec())
 
     def show_add_ref_modal(self):
+        self.ref_modal_type = RefModalType.ADD
+        self.show_ref_modal()
+
+    def show_edit_ref_modal(self, ref_data: cs_db.Ref):
+        self.ref_modal_type = RefModalType.EDIT
+        self.now_edit_ref_id = ref_data.id
+
+        self.add_ref_modal.name_line_edit.setText(ref_data.Food_name)
+        self.add_ref_modal.amount_line_edit.setText(str(ref_data.Amount))
+        self.add_ref_modal.expiration_duration_date_edit.setDate(
+            QDate.fromString(ref_data.Expiration_date, "yyyy-MM-dd")
+        )
+        index = self.add_ref_modal.type_combo_box.findText(ref_data.Food_type)
+
+        if index != -1:
+            self.add_ref_modal.type_combo_box.setCurrentIndex(index)
+
+        self.show_ref_modal()
+
+    def show_ref_modal(self):
         button_bottom = self.window.ref_add_self_btn.mapToGlobal(
             self.window.ref_add_self_btn.rect().bottomLeft()
         )
@@ -147,6 +175,41 @@ class Mainwindow:
         self.add_ref_modal.setGeometry(combo_x, combo_y, self.add_ref_modal.width(), 25)
 
         self.add_ref_modal.show()
+
+    def ok_ref_modal(self):
+        if self.ref_modal_type == RefModalType.ADD:
+            self.create_ref()
+        elif self.ref_modal_type == RefModalType.EDIT:
+            self.edit_ref()
+
+    def edit_ref(self):
+        food_name = self.add_ref_modal.name_line_edit.text()
+        amount = self.add_ref_modal.amount_line_edit.text()
+        expiration_date = self.add_ref_modal.expiration_duration_date_edit.text()
+        food_type = self.add_ref_modal.type_combo_box.currentText()
+
+        print(f"Editing ref: {food_name}, {amount}, {expiration_date}, {food_type}")
+
+        if cs_db.Database.update(
+            self.now_edit_ref_id, food_name, amount, expiration_date, food_type
+        ):
+            print("Ref updated successfully.")
+
+            for i in self.all_ref_cards:
+                if i.ref_data.id == self.now_edit_ref_id:
+                    print(f"Updating ref card with id: {self.now_edit_ref_id}")
+                    i.ref_data.Food_name = food_name
+                    i.ref_data.Amount = amount
+                    i.ref_data.Expiration_date = expiration_date
+                    i.ref_data.Food_type = food_type
+                    break
+
+            self.close_ref_modal()
+
+            self.draw_ref_cards(food_type=FoodType(food_type), ordering=OrderingType.LATEST)
+
+        else:
+            print("Failed to update ref.")
 
     def show_search_manage_ref_modal(self):
         # button_bottom = self.window..mapToGlobal(self.window.ref_add_self_btn.rect().bottomLeft())
@@ -195,11 +258,15 @@ class Mainwindow:
             Food_type=food_type,
         )
 
-        ref_card = RefCard(new_ref, delete_callback=self.delete_ref)
+        ref_card = RefCard(
+            new_ref,
+            delete_callback=self.delete_ref,
+            edit_callback=self.show_edit_ref_modal,
+        )
         self.all_ref_cards.append(ref_card)
         self.draw_ref_cards(food_type=FoodType(food_type), ordering=OrderingType.LATEST)
 
-        self.close_add_ref_modal(only_clear=True)
+        self.close_ref_modal()
 
         if food_type == FoodType.MEAT.value:
             self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
@@ -230,6 +297,8 @@ class Mainwindow:
     def draw_ref_cards(
         self, food_type: FoodType, is_only_favorite=False, ordering=OrderingType.LATEST
     ):
+        print(f"draw ref cards Food type : {food_type.value}, ")
+
         ref_cards = self.get_ref_cards_by_food_type(food_type)
 
         if not ref_cards:
@@ -281,7 +350,11 @@ class Mainwindow:
         ref_cards = []
         for i in self.all_ref_cards:
             if i.ref_data.Food_type == food_type.value:
-                card = RefCard(i.ref_data, delete_callback=self.delete_ref)
+                card = RefCard(
+                    i.ref_data,
+                    delete_callback=self.delete_ref,
+                    edit_callback=self.show_edit_ref_modal,
+                )
 
                 ref_cards.append(card)
 
@@ -487,7 +560,11 @@ class Mainwindow:
 
         ref_cards = []
         for i in refs:
-            card = RefCard(i, delete_callback=self.delete_ref)
+            card = RefCard(
+                i,
+                delete_callback=self.delete_ref,
+                edit_callback=self.show_edit_ref_modal,
+            )
             ref_cards.append(card)
 
         self.all_ref_cards = ref_cards
@@ -506,14 +583,16 @@ class Mainwindow:
         else:
             self.draw_all_ref_cards(is_only_favorite=False)
 
-    def close_add_ref_modal(self, only_clear=False):
+    def close_ref_modal(self):
+        self.clear_ref_modal()
+        self.add_ref_modal.close()
+
+    def clear_ref_modal(self):
+        self.now_edit_ref_id = None
         self.add_ref_modal.name_line_edit.clear()
         self.add_ref_modal.amount_line_edit.clear()
         self.add_ref_modal.expiration_duration_date_edit.setDate(QDate.currentDate())
         self.add_ref_modal.type_combo_box.setCurrentIndex(0)
-
-        if not only_clear:
-            self.add_ref_modal.close()
 
     def get_ordering_type(self, food_type: FoodType, ordering: str):
         print(f"Ordering type: {ordering} for {food_type.value}")

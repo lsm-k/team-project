@@ -71,10 +71,10 @@ class InterfaceInteraction:
         self.window.fav_ch_btn.clicked.connect(self.show_only_favorite)
 
         # ref add btns
-        self.window.ref_add_self_btn.clicked.connect(self.show_add_ref_modal)
+        self.window.ref_add_self_btn.clicked.connect(self.show_ref_modal)
 
-        self.add_ref_modal.yes_or_no_btn.accepted.connect(self.create_ref)
-        self.add_ref_modal.yes_or_no_btn.rejected.connect(self.close_add_ref_modal)
+        self.add_ref_modal.yes_or_no_btn.accepted.connect(self.ok_ref_modal)
+        self.add_ref_modal.yes_or_no_btn.rejected.connect(self.close_ref_modal)
 
         self.window.open_search_manage_modal_btn.clicked.connect(
             self.show_search_manage_ref_modal
