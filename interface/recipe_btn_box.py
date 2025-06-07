@@ -1,13 +1,15 @@
 from PySide6.QtWidgets import QFrame, QCheckBox, QSizePolicy, QVBoxLayout, QHBoxLayout
 from PySide6.QtCore import Qt, Signal
 
+
 class RecipeBtnBox(QFrame):
     checkedChanged = Signal(bool)
 
     def __init__(self, checkbox_name, parent=None):
         super().__init__(parent)
         self.setObjectName("recipe_btn_box")
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QFrame#recipe_btn_box {
                 min-width: 20px;
                 min-height: 20px;
@@ -17,7 +19,8 @@ class RecipeBtnBox(QFrame):
                 border-radius: 10px;
                 background-color: rgb(255, 255, 255, 0);
             }
-        """)
+        """
+        )
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)  # 크기 자동 맞춤
         # self.setFixedHeight(40)  # 이 줄은 제거!
         self.setup_ui(checkbox_name)
@@ -38,7 +41,9 @@ class RecipeBtnBox(QFrame):
 
     def create_checkbox(self, text):
         cbox = QCheckBox(text)
-        cbox.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)  # 체크박스 크기에 맞춤
+        cbox.setSizePolicy(
+            QSizePolicy.Maximum, QSizePolicy.Maximum
+        )  # 체크박스 크기에 맞춤
         cbox.setStyleSheet("font-size: 16px;")
         cbox.stateChanged.connect(self.change_checkbox_state)
         return cbox

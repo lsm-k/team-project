@@ -83,18 +83,16 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
-        
+
         for i in range(1, 5):
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
             if frame:
                 frame.setVisible(False)
-        
+
         self.window.recipe_search_box.textChanged.connect(
             self.toggle_button_by_lineedit
         )
         self.toggle_button_by_lineedit()
-
-
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -139,7 +137,9 @@ class Mainwindow:
 
         self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
         self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
-        self.add_recipe_btns_by_type(FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea")
+        self.add_recipe_btns_by_type(
+            FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea"
+        )
         self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
 
         self.window.show()
@@ -238,7 +238,6 @@ class Mainwindow:
         tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
         tab_2.setCurrentIndex(tab_kind.value)
 
-    # TODO: add validation, insert error handling
     def create_ref(self):
         food_name = self.add_ref_modal.name_line_edit.text()
         amount = self.add_ref_modal.amount_line_edit.text()
@@ -275,8 +274,10 @@ class Mainwindow:
             self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
 
         if food_type == FoodType.FRUIT_VEGETABLE.value:
-            self.add_recipe_btns_by_type(FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea")
-            
+            self.add_recipe_btns_by_type(
+                FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea"
+            )
+
         if food_type == FoodType.OTHER.value:
             self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
 
@@ -433,6 +434,7 @@ class Mainwindow:
 
         def fix_geometry():
             widget.setGeometry(end_rect)
+
         anim.finished.connect(fix_geometry)
 
     def toggle_button_by_lineedit(self):
@@ -489,8 +491,8 @@ class Mainwindow:
     #     max_per_row = 5
     #     for idx, name in enumerate(meat_names):
     #         btn_box = RecipeBtnBox(name)
-    #         row = idx % 2      
-    #         col = idx // 2     
+    #         row = idx % 2
+    #         col = idx // 2
     #         grid_layout.addWidget(btn_box, row, col)
 
     #     min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
@@ -542,8 +544,8 @@ class Mainwindow:
         max_per_row = 5
         for idx, name in enumerate(names):
             btn_box = RecipeBtnBox(name)
-            row = idx % 2      
-            col = idx // 2     
+            row = idx % 2
+            col = idx // 2
             grid_layout.addWidget(btn_box, row, col)
 
         min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
@@ -630,7 +632,9 @@ class Mainwindow:
                 # ★ 육류 재료가 삭제되었을 때 버튼 갱신
                 self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
                 self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
-                self.add_recipe_btns_by_type(FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea")
+                self.add_recipe_btns_by_type(
+                    FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea"
+                )
                 self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
             else:
                 print(f"Failed to delete ref with id: {ref_id}")

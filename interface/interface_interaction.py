@@ -118,7 +118,7 @@ class InterfaceInteraction:
         )
 
         self.window.recipe_meat_btn.clicked.connect(
-            lambda : self.popup_animation_from_point("meat_tab_frame", 40, 30)
+            lambda: self.popup_animation_from_point("meat_tab_frame", 40, 30)
         )
 
         self.window.recipe_fishes_btn.clicked.connect(
@@ -126,7 +126,7 @@ class InterfaceInteraction:
         )
 
         self.window.recipe_fishes_btn.clicked.connect(
-            lambda : self.popup_animation_from_point("fishes_tab_frame", 170, 30)
+            lambda: self.popup_animation_from_point("fishes_tab_frame", 170, 30)
         )
 
         self.window.recipe_vegetable_btn.clicked.connect(
@@ -134,20 +134,18 @@ class InterfaceInteraction:
         )
 
         self.window.recipe_vegetable_btn.clicked.connect(
-            lambda : self.popup_animation_from_point("vegetable_tab_frame", 270, 30)
+            lambda: self.popup_animation_from_point("vegetable_tab_frame", 270, 30)
         )
 
-        self.window.recipe_others_btn.clicked.connect(  
+        self.window.recipe_others_btn.clicked.connect(
             lambda: self.change_tab_recipe(RecipeTabKind.ANOTHER)
         )
 
         self.window.recipe_others_btn.clicked.connect(
-            lambda : self.popup_animation_from_point("others_tab_frame", 400, 30)
+            lambda: self.popup_animation_from_point("others_tab_frame", 400, 30)
         )
 
-        self.window.X_recipe_btn.clicked.connect(
-            self.clear_line_edit
-        )
+        self.window.X_recipe_btn.clicked.connect(self.clear_line_edit)
 
         self.window.return_meat_tab_btn.clicked.connect(
             lambda: self.change_tab_recipe(RecipeTabKind.MAIN)
