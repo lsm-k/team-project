@@ -482,7 +482,6 @@ class Mainwindow:
 
     def ref_get_all(self):
         from interface.ref_card import RefCard
-        from cold_storage import db as favorite_db
 
         refs = cs_db.Database.get_all()
 
