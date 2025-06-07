@@ -122,7 +122,9 @@ class RefCard(QFrame):
         self.edit_callback(self.ref_data)
 
     def favorite_func(self):
-        self.favorite_callback(self.ref_data.id, self.ref_data.Food_type, self.ref_data.is_favorite)
+        self.favorite_callback(
+            self.ref_data.id, self.ref_data.Food_type, self.ref_data.is_favorite
+        )
 
     def create_info_row(self, label_text, value_text):
         layout = QHBoxLayout()
