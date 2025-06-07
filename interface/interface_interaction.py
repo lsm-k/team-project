@@ -86,22 +86,7 @@ class InterfaceInteraction:
             self.search_ref_manage
         )  # 엔터키 누르면 검색
 
-        # self.window.show_search_box_btn_1.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_1")
-        # )
-
-        # self.window.show_search_box_btn_2.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_2")
-        # )
-
-        # self.window.show_search_box_btn_3.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_3")
-        # )
-
-        # self.window.show_search_box_btn_4.clicked.connect(
-        #     lambda: self.animation_search_box("search_frame_4")
-        # )
-
+        # 재료페이지 검색 상자 오픈 버튼
         for i in range(1, 5):
             search_frame_num = self.window.findChild(
                 QPushButton, f"show_search_box_btn_{i}"
@@ -112,6 +97,22 @@ class InterfaceInteraction:
                         f"search_frame_{num}"
                     )
                 )
+
+        # 재료페이지 검색 버튼들
+        from interface.interface_main import FoodType
+
+        self.window.ref_meat_search_btn.clicked.connect(
+            lambda: self.search_ref_by_name(food_type=FoodType.MEAT)
+        )
+        self.window.ref_fruit_vegetable_search_btn.clicked.connect(
+            lambda: self.search_ref_by_name(food_type=FoodType.FRUIT_VEGETABLE)
+        )
+        self.window.ref_sea_food_search_btn.clicked.connect(
+            lambda: self.search_ref_by_name(food_type=FoodType.SEA_FOOD)
+        )
+        self.window.ref_other_search_btn.clicked.connect(
+            lambda: self.search_ref_by_name(food_type=FoodType.OTHER)
+        )
 
         self.window.recipe_meat_btn.clicked.connect(
             lambda: self.change_tab_recipe(RecipeTabKind.BEEF)

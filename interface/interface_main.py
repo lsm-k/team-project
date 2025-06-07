@@ -653,3 +653,54 @@ class Mainwindow:
                 break
 
         self.draw_ref_cards(food_type=FoodType(food_type))
+
+    def search_ref_by_name(self, food_type: FoodType):
+        name = "";
+        
+        match food_type:
+            case FoodType.MEAT:
+                name = self.window.ref_search_box_1.text()
+            case FoodType.SEA_FOOD:
+                name = self.window.ref_search_box_4.text()
+            case FoodType.FRUIT_VEGETABLE:
+                name = self.window.ref_search_box_2.text()
+            case FoodType.OTHER:
+                name = self.window.ref_search_box_3.text()
+
+        print(f"Searching for '{name}' in {food_type.value}")
+
+        if not name:
+            print("검색어가 비어 있습니다. 값을 전체로 검색합니다.")
+            self.ref_get_all()
+            self.draw_ref_cards(food_type=food_type)
+            return
+
+        self.ref_get_all()
+        refs = self.all_ref_cards
+
+        filtered_refs = [
+            ref
+            for ref in refs
+            if name.lower() in ref.ref_data.Food_name.lower()
+            and ref.ref_data.Food_type == food_type.value
+        ]
+
+        if not filtered_refs:
+            print(f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다.")
+            QMessageBox.information(
+                None, "검색 결과", f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다."
+            )
+            return
+
+        ref_cards = []
+        for i in filtered_refs:
+            card = RefCard(
+                i.ref_data,
+                delete_callback=self.delete_ref,
+                edit_callback=self.show_edit_ref_modal,
+                favorite_callback=self.change_ref_card_favorite,
+            )
+            ref_cards.append(card)
+
+        self.all_ref_cards = ref_cards
+        self.draw_ref_cards(food_type=food_type)

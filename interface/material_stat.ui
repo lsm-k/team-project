@@ -343,7 +343,7 @@ border-color: rgba(255, 255, 255, 0);
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="ref_search_btn_3">
+                     <widget class="QPushButton" name="ref_other_search_btn">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -578,7 +578,7 @@ border-color: rgba(255, 255, 255, 0);
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="ref_search_btn_1">
+                     <widget class="QPushButton" name="ref_meat_search_btn">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -794,7 +794,7 @@ border-color: rgba(255, 255, 255, 0);
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="ref_search_btn_4">
+                     <widget class="QPushButton" name="ref_sea_food_search_btn">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -1029,7 +1029,7 @@ border-color: rgba(255, 255, 255, 0);
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="ref_search_btn_2">
+                     <widget class="QPushButton" name="ref_fruit_vegetable_search_btn">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                         <horstretch>0</horstretch>
