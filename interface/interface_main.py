@@ -266,6 +266,7 @@ class Mainwindow:
             new_ref,
             delete_callback=self.delete_ref,
             edit_callback=self.show_edit_ref_modal,
+            favorite_callback=self.change_ref_card_favorite,
         )
         self.all_ref_cards.append(ref_card)
         self.draw_ref_cards(food_type=FoodType(food_type))
@@ -357,6 +358,7 @@ class Mainwindow:
                     i.ref_data,
                     delete_callback=self.delete_ref,
                     edit_callback=self.show_edit_ref_modal,
+                    favorite_callback=self.change_ref_card_favorite,
                 )
 
                 ref_cards.append(card)
@@ -568,6 +570,7 @@ class Mainwindow:
                 i,
                 delete_callback=self.delete_ref,
                 edit_callback=self.show_edit_ref_modal,
+                favorite_callback=self.change_ref_card_favorite,
             )
             ref_cards.append(card)
 
@@ -642,3 +645,11 @@ class Mainwindow:
                 self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
             else:
                 print(f"Failed to delete ref with id: {ref_id}")
+
+    def change_ref_card_favorite(self, ref_id: int, food_type: str, is_favorite: bool):
+        for card in self.all_ref_cards:
+            if card.ref_data.id == ref_id:
+                card.set_favorite(is_favorite)
+                break
+
+        self.draw_ref_cards(food_type=FoodType(food_type))

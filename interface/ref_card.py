@@ -14,11 +14,14 @@ from cold_storage import db as cs_db
 
 
 class RefCard(QFrame):
-    def __init__(self, ref, delete_callback=None, edit_callback=None):
+    def __init__(
+        self, ref, delete_callback=None, edit_callback=None, favorite_callback=None
+    ):
         super().__init__()
         self.ref_data = ref
         self.delete_callback = delete_callback
         self.edit_callback = edit_callback
+        self.favorite_callback = favorite_callback
 
         self.setup_ui()
         self.setup_style()
@@ -118,6 +121,9 @@ class RefCard(QFrame):
         print("Edit button clicked")
         self.edit_callback(self.ref_data)
 
+    def favorite_func(self):
+        self.favorite_callback(self.ref_data.id, self.ref_data.Food_type, self.ref_data.is_favorite)
+
     def create_info_row(self, label_text, value_text):
         layout = QHBoxLayout()
 
@@ -170,6 +176,7 @@ class RefCard(QFrame):
             self.favorite(self.ref_data.id)
 
         self.ref_data.is_favorite = not self.ref_data.is_favorite
+        self.favorite_func()
         self.update_favorite_button()
         print(f"{self.ref_data.Food_name} 즐겨찾기: {self.ref_data.is_favorite}")
 
