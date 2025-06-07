@@ -136,7 +136,7 @@ class Mainwindow:
 
         self.clear_ref_modal()
 
-        self.all_ref_card = self.ref_get_all()
+        self.ref_get_all()
 
         self.draw_all_ref_cards()
 
