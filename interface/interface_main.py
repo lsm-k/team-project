@@ -332,7 +332,7 @@ class Mainwindow:
                     ref_cards, key=lambda x: x.ref_data.created_at, reverse=True
                 )
             case OrderingType.EXPIRING_SOON:
-                ref_cards = sorted(ref_cards, key=lambda x: x.ref_data.Expiration_date)
+                ref_cards = sorted(ref_cards, key=lambda x: x.ref_data.Expiration_date, reverse=True)
             case _:
                 print("Unknown ordering type, using default (latest)")
 
