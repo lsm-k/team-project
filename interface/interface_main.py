@@ -68,6 +68,11 @@ class Mainwindow:
     ref_modal_type = RefModalType.ADD
     now_edit_ref_id = None
 
+    ref_tab_meat_ordering = OrderingType.LATEST
+    ref_tab_sea_food_ordering = OrderingType.LATEST
+    ref_tab_fruit_vegetable_ordering = OrderingType.LATEST
+    ref_tab_other_ordering = OrderingType.LATEST
+
     # Datas
     all_ref_cards = []
 
@@ -206,7 +211,7 @@ class Mainwindow:
 
             self.close_ref_modal()
 
-            self.draw_ref_cards(food_type=FoodType(food_type), ordering=OrderingType.LATEST)
+            self.draw_ref_cards(food_type=FoodType(food_type))
 
         else:
             print("Failed to update ref.")
@@ -263,7 +268,7 @@ class Mainwindow:
             edit_callback=self.show_edit_ref_modal,
         )
         self.all_ref_cards.append(ref_card)
-        self.draw_ref_cards(food_type=FoodType(food_type), ordering=OrderingType.LATEST)
+        self.draw_ref_cards(food_type=FoodType(food_type))
 
         self.close_ref_modal()
 
@@ -281,23 +286,13 @@ class Mainwindow:
         if food_type == FoodType.OTHER.value:
             self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
 
-    def draw_all_ref_cards(self, is_only_favorite=False):
-        self.draw_ref_cards(
-            FoodType.MEAT, is_only_favorite, ordering=OrderingType.LATEST
-        )
-        self.draw_ref_cards(
-            FoodType.SEA_FOOD, is_only_favorite, ordering=OrderingType.LATEST
-        )
-        self.draw_ref_cards(
-            FoodType.FRUIT_VEGETABLE, is_only_favorite, ordering=OrderingType.LATEST
-        )
-        self.draw_ref_cards(
-            FoodType.OTHER, is_only_favorite, ordering=OrderingType.LATEST
-        )
+    def draw_all_ref_cards(self):
+        self.draw_ref_cards(FoodType.MEAT)
+        self.draw_ref_cards(FoodType.SEA_FOOD)
+        self.draw_ref_cards(FoodType.FRUIT_VEGETABLE)
+        self.draw_ref_cards(FoodType.OTHER)
 
-    def draw_ref_cards(
-        self, food_type: FoodType, is_only_favorite=False, ordering=OrderingType.LATEST
-    ):
+    def draw_ref_cards(self, food_type: FoodType):
         print(f"draw ref cards Food type : {food_type.value}, ")
 
         ref_cards = self.get_ref_cards_by_food_type(food_type)
@@ -306,8 +301,28 @@ class Mainwindow:
             print(f"{food_type.value}에 해당하는 재료가 없습니다.")
             return
 
-        if is_only_favorite:
+        if self.is_show_only_favorite:
             ref_cards = [i for i in ref_cards if i.ref_data.is_favorite == True]
+
+        scroll_area_content = None
+        ordering = None
+        match food_type:
+            case FoodType.MEAT:
+                scroll_area_content = self.window.meat_scroll_area_content
+                ordering = self.ref_tab_meat_ordering
+            case FoodType.SEA_FOOD:
+                scroll_area_content = self.window.sea_food_scroll_area_content
+                ordering = self.ref_tab_sea_food_ordering
+            case FoodType.FRUIT_VEGETABLE:
+                scroll_area_content = self.window.fruit_vegetable_scroll_area_content
+                ordering = self.ref_tab_fruit_vegetable_ordering
+            case FoodType.OTHER:
+                scroll_area_content = self.window.other_scroll_area_content
+                ordering = self.ref_tab_other_ordering
+
+        if not scroll_area_content:
+            print(f"{food_type.value} 스크롤 영역을 찾을 수 없습니다.")
+            return
 
         match ordering:
             case OrderingType.LATEST:
@@ -320,21 +335,6 @@ class Mainwindow:
                 ref_cards = sorted(ref_cards, key=lambda x: x.ref_data.Expiration_date)
             case _:
                 print("Unknown ordering type, using default (latest)")
-
-        scroll_area_content = None
-        match food_type:
-            case FoodType.MEAT:
-                scroll_area_content = self.window.meat_scroll_area_content
-            case FoodType.SEA_FOOD:
-                scroll_area_content = self.window.sea_food_scroll_area_content
-            case FoodType.FRUIT_VEGETABLE:
-                scroll_area_content = self.window.fruit_vegetable_scroll_area_content
-            case FoodType.OTHER:
-                scroll_area_content = self.window.other_scroll_area_content
-
-        if not scroll_area_content:
-            print(f"{food_type.value} 스크롤 영역을 찾을 수 없습니다.")
-            return
 
         layout = scroll_area_content.layout()
 
@@ -575,15 +575,11 @@ class Mainwindow:
         if self.is_show_only_favorite:
             self.is_show_only_favorite = False
             self.window.fav_ch_btn.setText("즐겨찾는 재료")
-
         else:
             self.is_show_only_favorite = True
             self.window.fav_ch_btn.setText("X")
 
-        if self.is_show_only_favorite:
-            self.draw_all_ref_cards(is_only_favorite=True)
-        else:
-            self.draw_all_ref_cards(is_only_favorite=False)
+        self.draw_all_ref_cards()
 
     def close_ref_modal(self):
         self.clear_ref_modal()
@@ -611,11 +607,17 @@ class Mainwindow:
                 print("Unknown ordering type, using default (latest)")
                 ordering_type = OrderingType.LATEST
 
-        self.draw_ref_cards(
-            food_type=food_type,
-            is_only_favorite=self.is_show_only_favorite,
-            ordering=ordering_type,
-        )
+        match food_type:
+            case FoodType.MEAT:
+                self.ref_tab_meat_ordering = ordering_type
+            case FoodType.SEA_FOOD:
+                self.ref_tab_sea_food_ordering = ordering_type
+            case FoodType.FRUIT_VEGETABLE:
+                self.ref_tab_fruit_vegetable_ordering = ordering_type
+            case FoodType.OTHER:
+                self.ref_tab_other_ordering = ordering_type
+
+        self.draw_ref_cards(food_type=food_type)
 
     def delete_ref(self, ref_id: int):
         result = QMessageBox.question(
@@ -626,7 +628,7 @@ class Mainwindow:
                 self.all_ref_cards = [
                     i for i in self.all_ref_cards if i.ref_data.id != ref_id
                 ]
-                self.draw_all_ref_cards(is_only_favorite=self.is_show_only_favorite)
+                self.draw_all_ref_cards()
                 print(f"Deleted ref with id: {ref_id}")
 
                 # ★ 육류 재료가 삭제되었을 때 버튼 갱신
