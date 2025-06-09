@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
+    <width>640</width>
     <height>851</height>
    </rect>
   </property>
@@ -256,7 +256,7 @@ border-color: rgba(255, 255, 255, 0);
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>227</width>
+                  <width>231</width>
                   <height>572</height>
                  </rect>
                 </property>
@@ -491,7 +491,7 @@ border-color: rgba(255, 255, 255, 0);
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>226</width>
+                  <width>230</width>
                   <height>476</height>
                  </rect>
                 </property>
@@ -707,7 +707,7 @@ border-color: rgba(255, 255, 255, 0);
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>226</width>
+                  <width>230</width>
                   <height>572</height>
                  </rect>
                 </property>
@@ -942,7 +942,7 @@ border-color: rgba(255, 255, 255, 0);
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>227</width>
+                  <width>231</width>
                   <height>572</height>
                  </rect>
                 </property>
@@ -1540,20 +1540,110 @@ color: rgb(255, 255, 255, 255);</string>
                  </layout>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Policy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 <layout class="QHBoxLayout" name="horizontalLayout_45">
+                  <item>
+                   <widget class="QLabel" name="label_8">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>50</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>추천피드 설정</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="recommand_feed_setting_btn">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>11</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>⌘</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_31">
+                    <property name="orientation">
+                     <enum>Qt::Orientation::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Policy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>391</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_19">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QPushButton" name="my_own_recip_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>26</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>18</pointsize>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>📖</string>
+                      </property>
+                      <property name="flat">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_9">
+                      <property name="font">
+                       <font>
+                        <pointsize>7</pointsize>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>나만의 레시피 모음집</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignmentFlag::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -1699,7 +1789,18 @@ background-color: rgb(255, 255, 255, 0);}</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                      <string notr="true">
+QScrollArea{
+	background-color: rgba(255, 255, 255, 0);
+}
+QScrollBar:Horizontal{
+	border:none;
+}
+QScrollBar::handle:horizontal{
+	min-height:10px;
+	max-height:10px;
+	background-color: rgb(177, 177, 177);
+}</string>
                      </property>
                      <property name="verticalScrollBarPolicy">
                       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
@@ -1718,7 +1819,7 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>489</width>
+                        <width>308</width>
                         <height>68</height>
                        </rect>
                       </property>
@@ -1949,6 +2050,21 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <height>0</height>
                       </size>
                      </property>
+                     <property name="styleSheet">
+                      <string notr="true">
+QScrollArea{
+	background-color: rgba(255, 255, 255, 0);
+}
+QScrollBar:Horizontal{
+	border:none;
+}
+QScrollBar::handle:horizontal{
+	min-height:10px;
+	max-height:10px;
+	background-color: rgb(177, 177, 177);
+}
+</string>
+                     </property>
                      <property name="verticalScrollBarPolicy">
                       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
                      </property>
@@ -1966,7 +2082,7 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>489</width>
+                        <width>406</width>
                         <height>68</height>
                        </rect>
                       </property>
@@ -2218,6 +2334,20 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <height>0</height>
                       </size>
                      </property>
+                     <property name="styleSheet">
+                      <string notr="true">
+QScrollArea{
+	background-color: rgba(255, 255, 255, 0);
+}
+QScrollBar:Horizontal{
+	border:none;
+}
+QScrollBar::handle:horizontal{
+	min-height:10px;
+	max-height:10px;
+	background-color: rgb(177, 177, 177);
+}</string>
+                     </property>
                      <property name="verticalScrollBarPolicy">
                       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
                      </property>
@@ -2235,7 +2365,7 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>489</width>
+                        <width>308</width>
                         <height>68</height>
                        </rect>
                       </property>
@@ -2466,6 +2596,20 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <height>0</height>
                       </size>
                      </property>
+                     <property name="styleSheet">
+                      <string notr="true">
+QScrollArea{
+	background-color: rgba(255, 255, 255, 0);
+}
+QScrollBar:Horizontal{
+	border:none;
+}
+QScrollBar::handle:horizontal{
+	min-height:10px;
+	max-height:10px;
+	background-color: rgb(177, 177, 177);
+}</string>
+                     </property>
                      <property name="verticalScrollBarPolicy">
                       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
                      </property>
@@ -2483,7 +2627,7 @@ background-color: rgb(255, 255, 255, 0);}</string>
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>489</width>
+                        <width>308</width>
                         <height>68</height>
                        </rect>
                       </property>
@@ -2580,9 +2724,47 @@ background-color: rgb(255, 255, 255, 0);}</string>
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
-             <widget class="QStackedWidget" name="stackedWidget">
-              <widget class="QWidget" name="page"/>
-              <widget class="QWidget" name="page_2"/>
+             <widget class="QStackedWidget" name="recip_main_widget">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="recommand_feed">
+               <layout class="QGridLayout" name="gridLayout_7">
+                <item row="0" column="0">
+                 <widget class="QScrollArea" name="recommand_feed_scrollarea">
+                  <property name="widgetResizable">
+                   <bool>true</bool>
+                  </property>
+                  <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>509</width>
+                     <height>534</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_8"/>
+                  </widget>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="my_own_recipe">
+               <widget class="QLabel" name="check_label">
+                <property name="geometry">
+                 <rect>
+                  <x>50</x>
+                  <y>20</y>
+                  <width>71</width>
+                  <height>16</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>나만의레시피</string>
+                </property>
+               </widget>
+              </widget>
              </widget>
             </item>
            </layout>

@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QMessageBox,
     QVBoxLayout,
+    QStackedWidget,
     QScrollArea,
     QHBoxLayout,
 )
@@ -36,6 +37,7 @@ from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 from interface.recipe_btn_box import RecipeBtnBox
+from interface.recommand_feed_box import RecommandFeedBox
 
 
 class OrderingType(Enum):
@@ -100,6 +102,8 @@ class Mainwindow:
             self.toggle_button_by_lineedit
         )
         self.toggle_button_by_lineedit()
+
+        self.place_recommand_feed_boxes()
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -465,79 +469,27 @@ class Mainwindow:
             lineedit.clear()
             self.toggle_button_by_lineedit()
 
-    # def add_meat_recipe_btns(self):
-    #     from cold_storage import db as cs_db
-    #     meat_names = [
-    #         ref.Food_name
-    #         for ref in cs_db.Database.get_all()
-    #         if ref.Food_type == "육류"
-    #     ]
-
-    #     find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
-    #     scroll_area = find_scroll_area.findChild(QScrollArea, "recipe_btn_scrollArea")
-    #     if not scroll_area:
-    #         print("스크롤 영역을 찾을 수 없습니다.")
-    #         return
-
-    #     content_widget = scroll_area.widget()
-    #     if not content_widget:
-    #         print("스크롤 영역의 컨텐츠 위젯을 찾을 수 없습니다.")
-    #         return
-
-    #     grid_layout = content_widget.layout()
-    #     if not isinstance(grid_layout, QGridLayout):
-    #         print("QGridLayout을 찾을 수 없습니다.")
-    #         return
-
-    #     grid_layout.setSpacing(0)
-    #     grid_layout.setContentsMargins(0, 0, 5, 0)
-
-    #     # 기존 위젯 모두 제거
-    #     while grid_layout.count():
-    #         item = grid_layout.takeAt(0)
-    #         widget = item.widget()
-    #         if widget is not None:
-    #             widget.setParent(None)
-    #             widget.deleteLater()
-
-    #     # 한 행에 5개씩 배치, 6개부터는 다음 행
-    #     max_per_row = 5
-    #     for idx, name in enumerate(meat_names):
-    #         btn_box = RecipeBtnBox(name)
-    #         row = idx % 2
-    #         col = idx // 2
-    #         grid_layout.addWidget(btn_box, row, col)
-
-    #     min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
-    #     min_width = max_per_row * min_btn_width
-    #     content_widget.setMinimumWidth(min_width)
-
-    #     scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-    #     scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
     def add_recipe_btns_by_type(self, food_type: FoodType, scroll_area_name: str):
         from cold_storage import db as cs_db
 
-        # 1. 해당 타입의 이름만 추출
         names = [
             ref.Food_name
             for ref in cs_db.Database.get_all()
             if ref.Food_type == food_type.value
         ]
 
-        # 2. ScrollArea, 내부 위젯, QGridLayout 찾기
         find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
         scroll_area = find_scroll_area.findChild(QScrollArea, scroll_area_name)
         if not scroll_area:
             print(f"{scroll_area_name} 스크롤 영역을 찾을 수 없습니다.")
             return
 
-        content_widget = scroll_area.widget()
-        if not content_widget:
+        feed_box_layout = scroll_area.widget()
+        if not feed_box_layout:
             print(f"{scroll_area_name}의 컨텐츠 위젯을 찾을 수 없습니다.")
             return
 
-        grid_layout = content_widget.layout()
+        grid_layout = feed_box_layout.layout()
         if not isinstance(grid_layout, QGridLayout):
             print(f"{scroll_area_name}의 QGridLayout을 찾을 수 없습니다.")
             return
@@ -545,7 +497,6 @@ class Mainwindow:
         grid_layout.setSpacing(0)
         grid_layout.setContentsMargins(0, 0, 5, 0)
 
-        # 기존 위젯 모두 제거
         while grid_layout.count():
             item = grid_layout.takeAt(0)
             widget = item.widget()
@@ -553,20 +504,18 @@ class Mainwindow:
                 widget.setParent(None)
                 widget.deleteLater()
 
-        # 한 행에 5개씩 배치, 6개부터는 다음 행
-        max_per_row = 5
+        max_per_row = 6
         for idx, name in enumerate(names):
             btn_box = RecipeBtnBox(name)
             row = idx % 2
             col = idx // 2
             grid_layout.addWidget(btn_box, row, col)
 
-        min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
-        min_width = max_per_row * min_btn_width
-        content_widget.setMinimumWidth(min_width)
-
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        if len(names) > max_per_row:
+            min_btn_width = 120
+            max_col = (len(names) + 1) // 2
+            min_width = max(max_col, max_per_row) * min_btn_width
+            feed_box_layout.setMinimumWidth(min_width)
 
     def ref_get_all(self):
         from interface.ref_card import RefCard
@@ -713,3 +662,41 @@ class Mainwindow:
 
         self.all_ref_cards = ref_cards
         self.draw_ref_cards(food_type=food_type)
+
+    def place_recommand_feed_boxes(self):
+        # recommand_feed_scrollarea(QScrollArea)에서 내부 위젯과 QGridLayout 찾기
+        scroll_area = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
+        if not scroll_area:
+            print("recommand_feed_scrollarea(QScrollArea)를 찾을 수 없습니다.")
+            return
+
+        content_widget = scroll_area.widget()
+        if not content_widget:
+            print("recommand_feed_scrollarea의 컨텐츠 위젯을 찾을 수 없습니다.")
+            return
+
+        grid_layout = content_widget.layout()
+        if not isinstance(grid_layout, QGridLayout):
+            print("recommand_feed_scrollarea의 QGridLayout을 찾을 수 없습니다.")
+            return
+
+        # 기존 위젯 모두 제거
+        while grid_layout.count():
+            item = grid_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        # 예시로 10개의 추천 박스 생성, 가로 3개씩 배치
+        for idx in range(20):
+            feed_box = RecommandFeedBox(
+                f"Title {idx+1}",
+                f"#Tag{idx+1}",
+                "D:/대학/team-project/interface/test_cat.jpg",
+                parent=content_widget
+            )
+            row = idx // 3  # 3개씩 한 행
+            col = idx % 3
+            grid_layout.addWidget(feed_box, row, col)
+            
