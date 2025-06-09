@@ -35,6 +35,8 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
 from recipe import db as recipe_db
+from setting import db as setting_db
+
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 from interface.recipe_btn_box import RecipeBtnBox
@@ -58,6 +60,7 @@ class RefModalType(Enum):
     ADD = "add"
     EDIT = "edit"
 
+font_sizes = [9, 10, 12, 14]
 
 class Mainwindow:
     # UIs
@@ -80,6 +83,8 @@ class Mainwindow:
     now_display_recipe = None
 
     gemini_api_key = None
+    font_size = None
+
     # Datas
     all_ref_cards = []
 
@@ -113,6 +118,8 @@ class Mainwindow:
             lambda: self.change_servings_with_gemini(5)
         )
 
+        self.window.setting_save_btn.clicked.connect(self.save_settings)
+
         for i in range(1, 5):
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
             if frame:
@@ -124,6 +131,9 @@ class Mainwindow:
         self.toggle_button_by_lineedit()
 
         self.place_recommand_feed_boxes()
+
+        # font_sizes 
+        self.window.font_size_cbx.addItems([str(size) for size in font_sizes])
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -180,6 +190,11 @@ class Mainwindow:
         self.window.setWindowIcon(main_icon)
         self.search_manage_ref_modal.setWindowIcon(main_icon)
         self.recipe_info_modal.setWindowIcon(main_icon)
+
+        if self.load_settings():
+            app_font = app.font()
+            app_font.setPointSize(int(self.font_size.value))
+            app.setFont(app_font)
 
         self.window.show()
 
@@ -785,6 +800,7 @@ class Mainwindow:
 
         steps = recipe_data.steps.replace(" | ", "\n\n")
         self.recipe_info_modal.step_txt_browser.setText(steps)
+        return True
 
         self.recipe_info_modal.show()
 
@@ -800,3 +816,56 @@ class Mainwindow:
                 "설정페이지에서 Gemini API 키를 설정해주세요.",
             )
             return
+
+    def load_settings(self):
+        self.gemini_api_key = setting_db.Database.get_gemini_api_key()
+        print(f"Loaded Gemini API Key: {self.gemini_api_key}")
+        self.window.gemini_api_keyLineEdit.setText(self.gemini_api_key.value or "")
+
+        self.font_size = setting_db.Database.get_font_size()
+        if self.font_size is None:
+            print("Font size setting not found, using default value.")
+            return False
+        else:
+            print(f"Loaded font size: {self.font_size.value}")
+            self.window.font_size_cbx.setCurrentText(self.font_size.value)
+            return True
+
+    def save_settings(self):
+        gemini_api_key = self.window.gemini_api_keyLineEdit.text()
+        if not gemini_api_key.strip():
+            QMessageBox.warning(
+                self.window,
+                "경고",
+                "Gemini API 키를 입력해주세요.",
+            )
+            return
+
+        print(f"Saving settings: Gemini API Key = {gemini_api_key}")
+
+        if self.gemini_api_key is None:
+            setting_db.Database.create("gemini_api_key", gemini_api_key)
+        else:
+            setting = setting_db.Database.get_with_name("gemini_api_key")
+            if setting is not None:
+                setting.value = gemini_api_key
+                setting_db.Database.update(setting)
+
+        now_font_size = self.window.font_size_cbx.currentText()
+        print(f"Saving settings: Font size = {now_font_size}")
+        if self.font_size is None:
+            setting_db.Database.create("font_size", str(now_font_size))
+            print("Font size setting created.")
+        else:
+            setting = setting_db.Database.get_with_name("font_size")
+            if setting is not None:
+                setting.value = str(now_font_size)
+                setting_db.Database.update(setting)
+
+            print("Font size setting updated.")
+        
+        QMessageBox.information(
+            self.window,
+            "설정 저장",
+            "설정이 저장되었습니다. 프로그램을 재시작해주세요.",
+        )
