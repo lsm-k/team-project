@@ -2,8 +2,20 @@ from PySide6.QtCore import Qt, QSize, Signal
 from PySide6.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
 
 class RecommandFeedBox(QFrame):
-    def __init__(self, title_label, tag_label, img, parent=None):
+    def __init__(
+        self,
+        recipe_id,
+        title_label,
+        tag_label,
+        img,
+        parent=None,
+        open_modal_callback=None,
+    ):
         super().__init__(parent)
+
+        self.recipe_id = recipe_id
+        self.open_modal_callback = open_modal_callback
+
         self.setObjectName("recommand_feed_box")
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.setup_ui(title_label, tag_label, img)
@@ -18,7 +30,9 @@ class RecommandFeedBox(QFrame):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setAlignment(Qt.AlignCenter)
         main_layout.setSpacing(2)
-        main_layout.addWidget(self.create_button("imb_btn", " ", 120, 150, img))
+        img_btn = self.create_button("img_btn", " ", 120, 150, img)
+        img_btn.clicked.connect(lambda: self.open_modal_callback(self.recipe_id))
+        main_layout.addWidget(img_btn)
         main_layout.addLayout(sub_v_layout)  # ← 여기만 addLayout으로 변경!
         sub_v_layout.addWidget(self.set_label(title_label))
         sub_v_layout.addLayout(sub_sub_h_layout)
@@ -48,4 +62,7 @@ class RecommandFeedBox(QFrame):
         label.setStyleSheet("font-size: 9px;")
         return label
 
-    
+    def open_modal(self, recipe_id):
+        if self.open_modal_callback:
+            print(f"Opening modal for recipe ID: {recipe_id}")
+            self.open_modal_callback(recipe_id)

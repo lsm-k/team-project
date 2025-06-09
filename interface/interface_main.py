@@ -34,6 +34,7 @@ from PySide6.QtGui import QDrag, QPixmap, QPainter, QIcon
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
+from recipe import db as recipe_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 from interface.recipe_btn_box import RecipeBtnBox
@@ -76,6 +77,9 @@ class Mainwindow:
     ref_tab_fruit_vegetable_ordering = OrderingType.LATEST
     ref_tab_other_ordering = OrderingType.LATEST
 
+    now_display_recipe = None
+
+    gemini_api_key = None
     # Datas
     all_ref_cards = []
 
@@ -91,7 +95,23 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
+
         self.recipe_info_modal = self.load_ui("recipe_info_modal")
+        self.recipe_info_modal.serving_1_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(1)
+        )
+        self.recipe_info_modal.serving_2_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(2)
+        )
+        self.recipe_info_modal.serving_3_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(3)
+        )
+        self.recipe_info_modal.serving_4_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(4)
+        )
+        self.recipe_info_modal.serving_5_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(5)
+        )
 
         for i in range(1, 5):
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
@@ -691,15 +711,92 @@ class Mainwindow:
                 widget.setParent(None)
                 widget.deleteLater()
 
+
         # 예시로 10개의 추천 박스 생성, 가로 3개씩 배치
-        for idx in range(20):
+        recipe_ids = [
+            7052101,
+            7022775,
+            7033948,
+            7029097,
+            7035751,
+            7052101,
+            7022775,
+            7035751,
+            7018465,
+            7052101,
+            7022775,
+            7035751,
+            6984517,
+            7025833,
+            7009944,
+            6993517,
+            7003487,
+            7005830,
+        ]
+
+        for idx in recipe_ids:
             feed_box = RecommandFeedBox(
-                f"Title {idx+1}",
-                f"#Tag{idx+1}",
-                "D:/대학/team-project/interface/test_cat.jpg",
-                parent=content_widget
+                recipe_id=idx,
+                title_label=f"Title {idx+1}",
+                tag_label=f"#Tag {idx+1}",
+                img="D:/대학/team-project/interface/test_cat.jpg",
+                parent=content_widget,
+                open_modal_callback=self.open_recipe_info_modal,
             )
             row = idx // 3  # 3개씩 한 행
             col = idx % 3
             grid_layout.addWidget(feed_box, row, col)
-            
+
+    def open_recipe_info_modal(self, recipe_id: int):
+        recipe_data = recipe_db.Database.get_with_id(recipe_id)
+        if not recipe_data:
+            print(f"레시피 ID {recipe_id}를 찾을 수 없습니다.")
+            return
+
+        self.now_display_recipe = recipe_data
+        self.recipe_info_modal.setWindowTitle(recipe_data.title)
+
+        self.recipe_info_modal.youtube_w_view.load(
+            QUrl(
+                f"https://www.youtube.com/@%EB%A7%8C%EA%B0%9C%EC%9D%98%EB%A0%88%EC%8B%9C%ED%94%BC/search?query={recipe_data.title}"
+            )
+        )
+
+        level = ""
+        match recipe_data.level:
+            case "초급":
+                level = "⭐⭐⭐"
+            case "아무나":
+                level = "⭐⭐"
+            case "중급":
+                level = "⭐⭐⭐⭐"
+            case "고급":
+                level = "⭐⭐⭐⭐⭐"
+            case "":
+                level = "⭐"
+
+        self.recipe_info_modal.name_level_lbl.setText(f"{recipe_data.title} {level}")
+
+        self.recipe_info_modal.cooking_time_lbl.setText(recipe_data.cooking_time)
+        self.recipe_info_modal.origin_servings_lbl.setText(recipe_data.servings)
+
+        ingredients = recipe_data.ingredients.replace(" | ", "\n").replace("] ", "]\n")
+        self.recipe_info_modal.ingredient_lbl.setText(ingredients)
+
+        steps = recipe_data.steps.replace(" | ", "\n\n")
+        self.recipe_info_modal.step_txt_browser.setText(steps)
+
+        self.recipe_info_modal.show()
+
+    def change_servings_with_gemini(self, servings: int):
+        if not self.now_display_recipe:
+            print("현재 표시된 레시피가 없습니다.")
+            return
+
+        if not self.gemini_api_key:
+            QMessageBox.warning(
+                self.recipe_info_modal,
+                "경고",
+                "설정페이지에서 Gemini API 키를 설정해주세요.",
+            )
+            return
