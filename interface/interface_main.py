@@ -800,7 +800,6 @@ class Mainwindow:
 
         steps = recipe_data.steps.replace(" | ", "\n\n")
         self.recipe_info_modal.step_txt_browser.setText(steps)
-        return True
 
         self.recipe_info_modal.show()
 
