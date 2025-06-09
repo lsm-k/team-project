@@ -816,6 +816,12 @@ class Mainwindow:
             )
             return
 
+        from api import google
+        res = google.change_cooking_setp(
+            self.now_display_recipe, self.gemini_api_key.value, servings
+        )
+        self.recipe_info_modal.step_txt_browser.setText(res)
+
     def load_settings(self):
         self.gemini_api_key = setting_db.Database.get_gemini_api_key()
         print(f"Loaded Gemini API Key: {self.gemini_api_key}")
