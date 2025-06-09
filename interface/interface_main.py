@@ -614,8 +614,8 @@ class Mainwindow:
         self.draw_ref_cards(food_type=FoodType(food_type))
 
     def search_ref_by_name(self, food_type: FoodType):
-        name = "";
-        
+        name = ""
+
         match food_type:
             case FoodType.MEAT:
                 name = self.window.ref_search_box_1.text()
@@ -647,7 +647,9 @@ class Mainwindow:
         if not filtered_refs:
             print(f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다.")
             QMessageBox.information(
-                None, "검색 결과", f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다."
+                None,
+                "검색 결과",
+                f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다.",
             )
             return
 
