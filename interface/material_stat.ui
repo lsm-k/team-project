@@ -2630,6 +2630,26 @@ background-color: rgb(255, 255, 255, 0);}</string>
             <item row="0" column="1">
              <widget class="QComboBox" name="font_size_cbx"/>
             </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="gemini_api_keyLabel">
+              <property name="text">
+               <string>gemini_api_key</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="gemini_api_keyLineEdit"/>
+            </item>
+            <item row="2" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_14"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="setting_save_btn">
+              <property name="text">
+               <string>저장하기</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
