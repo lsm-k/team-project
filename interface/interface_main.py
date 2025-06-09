@@ -128,6 +128,7 @@ class Mainwindow:
         app = QApplication(sys.argv)
 
         self.setup_ui()
+        self.window.setWindowTitle("냉장고를 부탁해")
         self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.search_manage_ref_modal.setWindowTitle("재료 보관방법 검색창")
 
