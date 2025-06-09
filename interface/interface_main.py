@@ -29,7 +29,7 @@ from PySide6.QtCore import (
     QDate,
 )
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtGui import QDrag, QPixmap, QPainter
+from PySide6.QtGui import QDrag, QPixmap, QPainter, QIcon
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
@@ -146,6 +146,12 @@ class Mainwindow:
             FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea"
         )
         self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
+
+        icon_file_path = os.path.join(os.path.dirname(__file__), "main_icon.jpg")
+        main_icon = QIcon(icon_file_path)
+
+        self.window.setWindowIcon(main_icon)
+        self.search_manage_ref_modal.setWindowIcon(main_icon)
 
         self.window.show()
 
