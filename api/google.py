@@ -1,6 +1,7 @@
 from google import genai
 
-def change_cooking_setp(recipe_data, api_key :str, servings: int) -> str:
+
+def change_cooking_setp(recipe_data, api_key: str, servings: int) -> str:
     client = genai.Client(api_key=api_key)
 
     prompt = f"""

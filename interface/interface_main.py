@@ -60,7 +60,9 @@ class RefModalType(Enum):
     ADD = "add"
     EDIT = "edit"
 
+
 font_sizes = [9, 10, 12, 14]
+
 
 class Mainwindow:
     # UIs
@@ -132,7 +134,7 @@ class Mainwindow:
 
         self.place_recommand_feed_boxes()
 
-        # font_sizes 
+        # font_sizes
         self.window.font_size_cbx.addItems([str(size) for size in font_sizes])
 
     def display_none_all_tabs(self):
@@ -726,7 +728,6 @@ class Mainwindow:
                 widget.setParent(None)
                 widget.deleteLater()
 
-
         # 예시로 10개의 추천 박스 생성, 가로 3개씩 배치
         recipe_ids = [
             7052101,
@@ -817,6 +818,7 @@ class Mainwindow:
             return
 
         from api import google
+
         res = google.change_cooking_setp(
             self.now_display_recipe, self.gemini_api_key.value, servings
         )
@@ -868,7 +870,7 @@ class Mainwindow:
                 setting_db.Database.update(setting)
 
             print("Font size setting updated.")
-        
+
         QMessageBox.information(
             self.window,
             "설정 저장",

@@ -1,5 +1,13 @@
 from PySide6.QtCore import Qt, QSize, Signal
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
+from PySide6.QtWidgets import (
+    QFrame,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSizePolicy,
+)
+
 
 class RecommandFeedBox(QFrame):
     def __init__(
@@ -37,20 +45,24 @@ class RecommandFeedBox(QFrame):
         sub_v_layout.addWidget(self.set_label(title_label))
         sub_v_layout.addLayout(sub_sub_h_layout)
         sub_sub_h_layout.addWidget(self.set_label(tag_label))
-        sub_sub_h_layout.addWidget(self.create_button("thumbs_up_btn", "👍", 24, 42, None))
-        sub_sub_h_layout.addWidget(self.create_button("thumbs_down_btn", "👎", 24, 42, None))
+        sub_sub_h_layout.addWidget(
+            self.create_button("thumbs_up_btn", "👍", 24, 42, None)
+        )
+        sub_sub_h_layout.addWidget(
+            self.create_button("thumbs_down_btn", "👎", 24, 42, None)
+        )
         sub_sub_h_layout.addWidget(self.create_button("other_btn", "⋮", 24, 10, None))
-
 
     def create_button(self, name, text, size_hight, size_width, img):
         button = QPushButton(name)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         if img:
-            button.setStyleSheet(f"""
+            button.setStyleSheet(
+                f"""
                                  border-image:url({img});
                                  border:0px;
                                  """
-                                 )
+            )
         button.setFixedSize(size_width, size_hight)
         button.setCursor(Qt.PointingHandCursor)
         button.setText(text)
