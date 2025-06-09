@@ -61,6 +61,7 @@ class Mainwindow:
     window = None
     add_ref_modal = None
     search_manage_ref_modal = None
+    recipe_info_modal = None
 
     # Status
     is_show_only_favorite = False
@@ -88,6 +89,7 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
+        self.recipe_info_modal = self.load_ui("recipe_info_modal")
 
         for i in range(1, 5):
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
@@ -152,6 +154,7 @@ class Mainwindow:
 
         self.window.setWindowIcon(main_icon)
         self.search_manage_ref_modal.setWindowIcon(main_icon)
+        self.recipe_info_modal.setWindowIcon(main_icon)
 
         self.window.show()
 
