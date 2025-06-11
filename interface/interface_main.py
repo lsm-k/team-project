@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QMessageBox,
     QVBoxLayout,
+    QStackedWidget,
     QScrollArea,
     QHBoxLayout,
 )
@@ -29,10 +30,13 @@ from PySide6.QtCore import (
     QDate,
 )
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtGui import QDrag, QPixmap, QPainter
+from PySide6.QtGui import QDrag, QPixmap, QPainter, QIcon
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from cold_storage import db as cs_db
+from recipe import db as recipe_db
+from setting import db as setting_db
+
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 from interface.recipe_btn_box import RecipeBtnBox
@@ -57,11 +61,15 @@ class RefModalType(Enum):
     EDIT = "edit"
 
 
+font_sizes = [9, 10, 12, 14]
+
+
 class Mainwindow:
     # UIs
     window = None
     add_ref_modal = None
     search_manage_ref_modal = None
+    recipe_info_modal = None
 
     # Status
     is_show_only_favorite = False
@@ -73,6 +81,11 @@ class Mainwindow:
     ref_tab_sea_food_ordering = OrderingType.LATEST
     ref_tab_fruit_vegetable_ordering = OrderingType.LATEST
     ref_tab_other_ordering = OrderingType.LATEST
+
+    now_display_recipe = None
+
+    gemini_api_key = None
+    font_size = None
 
     # Datas
     all_ref_cards = []
@@ -90,6 +103,25 @@ class Mainwindow:
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
 
+        self.recipe_info_modal = self.load_ui("recipe_info_modal")
+        self.recipe_info_modal.serving_1_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(1)
+        )
+        self.recipe_info_modal.serving_2_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(2)
+        )
+        self.recipe_info_modal.serving_3_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(3)
+        )
+        self.recipe_info_modal.serving_4_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(4)
+        )
+        self.recipe_info_modal.serving_5_btn.clicked.connect(
+            lambda: self.change_servings_with_gemini(5)
+        )
+
+        self.window.setting_save_btn.clicked.connect(self.save_settings)
+
         for i in range(1, 5):
             frame = self.window.findChild(QFrame, f"search_frame_{i}")
             if frame:
@@ -99,6 +131,11 @@ class Mainwindow:
             self.toggle_button_by_lineedit
         )
         self.toggle_button_by_lineedit()
+
+        self.place_recommand_feed_boxes()
+
+        # font_sizes
+        self.window.font_size_cbx.addItems([str(size) for size in font_sizes])
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -123,6 +160,7 @@ class Mainwindow:
         app = QApplication(sys.argv)
 
         self.setup_ui()
+        self.window.setWindowTitle("냉장고를 부탁해")
         self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.search_manage_ref_modal.setWindowTitle("재료 보관방법 검색창")
 
@@ -147,6 +185,18 @@ class Mainwindow:
             FoodType.FRUIT_VEGETABLE, "vegetable_btn_scrollArea"
         )
         self.add_recipe_btns_by_type(FoodType.OTHER, "other_btn_scrollArea")
+
+        icon_file_path = os.path.join(os.path.dirname(__file__), "main_icon.jpg")
+        main_icon = QIcon(icon_file_path)
+
+        self.window.setWindowIcon(main_icon)
+        self.search_manage_ref_modal.setWindowIcon(main_icon)
+        self.recipe_info_modal.setWindowIcon(main_icon)
+
+        if self.load_settings():
+            app_font = app.font()
+            app_font.setPointSize(int(self.font_size.value))
+            app.setFont(app_font)
 
         self.window.show()
 
@@ -457,79 +507,27 @@ class Mainwindow:
             lineedit.clear()
             self.toggle_button_by_lineedit()
 
-    # def add_meat_recipe_btns(self):
-    #     from cold_storage import db as cs_db
-    #     meat_names = [
-    #         ref.Food_name
-    #         for ref in cs_db.Database.get_all()
-    #         if ref.Food_type == "육류"
-    #     ]
-
-    #     find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
-    #     scroll_area = find_scroll_area.findChild(QScrollArea, "recipe_btn_scrollArea")
-    #     if not scroll_area:
-    #         print("스크롤 영역을 찾을 수 없습니다.")
-    #         return
-
-    #     content_widget = scroll_area.widget()
-    #     if not content_widget:
-    #         print("스크롤 영역의 컨텐츠 위젯을 찾을 수 없습니다.")
-    #         return
-
-    #     grid_layout = content_widget.layout()
-    #     if not isinstance(grid_layout, QGridLayout):
-    #         print("QGridLayout을 찾을 수 없습니다.")
-    #         return
-
-    #     grid_layout.setSpacing(0)
-    #     grid_layout.setContentsMargins(0, 0, 5, 0)
-
-    #     # 기존 위젯 모두 제거
-    #     while grid_layout.count():
-    #         item = grid_layout.takeAt(0)
-    #         widget = item.widget()
-    #         if widget is not None:
-    #             widget.setParent(None)
-    #             widget.deleteLater()
-
-    #     # 한 행에 5개씩 배치, 6개부터는 다음 행
-    #     max_per_row = 5
-    #     for idx, name in enumerate(meat_names):
-    #         btn_box = RecipeBtnBox(name)
-    #         row = idx % 2
-    #         col = idx // 2
-    #         grid_layout.addWidget(btn_box, row, col)
-
-    #     min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
-    #     min_width = max_per_row * min_btn_width
-    #     content_widget.setMinimumWidth(min_width)
-
-    #     scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-    #     scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
     def add_recipe_btns_by_type(self, food_type: FoodType, scroll_area_name: str):
         from cold_storage import db as cs_db
 
-        # 1. 해당 타입의 이름만 추출
         names = [
             ref.Food_name
             for ref in cs_db.Database.get_all()
             if ref.Food_type == food_type.value
         ]
 
-        # 2. ScrollArea, 내부 위젯, QGridLayout 찾기
         find_scroll_area = self.window.findChild(QTabWidget, "recip_search_box_tab")
         scroll_area = find_scroll_area.findChild(QScrollArea, scroll_area_name)
         if not scroll_area:
             print(f"{scroll_area_name} 스크롤 영역을 찾을 수 없습니다.")
             return
 
-        content_widget = scroll_area.widget()
-        if not content_widget:
+        feed_box_layout = scroll_area.widget()
+        if not feed_box_layout:
             print(f"{scroll_area_name}의 컨텐츠 위젯을 찾을 수 없습니다.")
             return
 
-        grid_layout = content_widget.layout()
+        grid_layout = feed_box_layout.layout()
         if not isinstance(grid_layout, QGridLayout):
             print(f"{scroll_area_name}의 QGridLayout을 찾을 수 없습니다.")
             return
@@ -537,7 +535,6 @@ class Mainwindow:
         grid_layout.setSpacing(0)
         grid_layout.setContentsMargins(0, 0, 5, 0)
 
-        # 기존 위젯 모두 제거
         while grid_layout.count():
             item = grid_layout.takeAt(0)
             widget = item.widget()
@@ -545,20 +542,18 @@ class Mainwindow:
                 widget.setParent(None)
                 widget.deleteLater()
 
-        # 한 행에 5개씩 배치, 6개부터는 다음 행
-        max_per_row = 5
+        max_per_row = 6
         for idx, name in enumerate(names):
             btn_box = RecipeBtnBox(name)
             row = idx % 2
             col = idx // 2
             grid_layout.addWidget(btn_box, row, col)
 
-        min_btn_width = 120  # 버튼 예상 최소 너비, 필요시 조정
-        min_width = max_per_row * min_btn_width
-        content_widget.setMinimumWidth(min_width)
-
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        if len(names) > max_per_row:
+            min_btn_width = 120
+            max_col = (len(names) + 1) // 2
+            min_width = max(max_col, max_per_row) * min_btn_width
+            feed_box_layout.setMinimumWidth(min_width)
 
     def ref_get_all(self):
         from interface.ref_card import RefCard
@@ -656,8 +651,8 @@ class Mainwindow:
         self.draw_ref_cards(food_type=FoodType(food_type))
 
     def search_ref_by_name(self, food_type: FoodType):
-        name = "";
-        
+        name = ""
+
         match food_type:
             case FoodType.MEAT:
                 name = self.window.ref_search_box_1.text()
@@ -689,7 +684,9 @@ class Mainwindow:
         if not filtered_refs:
             print(f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다.")
             QMessageBox.information(
-                None, "검색 결과", f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다."
+                None,
+                "검색 결과",
+                f"{food_type.value}에 해당하는 '{name}' 재료가 없습니다.",
             )
             return
 
@@ -732,12 +729,150 @@ class Mainwindow:
                 widget.deleteLater()
 
         # 예시로 10개의 추천 박스 생성, 가로 3개씩 배치
-        for idx in range(20):
+        recipe_ids = [
+            7052101,
+            7022775,
+            7033948,
+            7029097,
+            7035751,
+            7052101,
+            7022775,
+            7035751,
+            7018465,
+            7052101,
+            7022775,
+            7035751,
+            6984517,
+            7025833,
+            7009944,
+            6993517,
+            7003487,
+            7005830,
+        ]
+
+        for idx in recipe_ids:
             feed_box = RecommandFeedBox(
-                f"Title {idx+1}",
-                "D:/대학/team-project/interface/test_cat.jpg",
-                parent=content_widget
+                recipe_id=idx,
+                title_label=f"Title {idx+1}",
+                tag_label=f"#Tag {idx+1}",
+                img="D:/대학/team-project/interface/test_cat.jpg",
+                parent=content_widget,
+                open_modal_callback=self.open_recipe_info_modal,
             )
             row = idx // 3  # 3개씩 한 행
             col = idx % 3
             grid_layout.addWidget(feed_box, row, col)
+
+    def open_recipe_info_modal(self, recipe_id: int):
+        recipe_data = recipe_db.Database.get_with_id(recipe_id)
+        if not recipe_data:
+            print(f"레시피 ID {recipe_id}를 찾을 수 없습니다.")
+            return
+
+        self.now_display_recipe = recipe_data
+        self.recipe_info_modal.setWindowTitle(recipe_data.title)
+
+        self.recipe_info_modal.youtube_w_view.load(
+            QUrl(
+                f"https://www.youtube.com/@%EB%A7%8C%EA%B0%9C%EC%9D%98%EB%A0%88%EC%8B%9C%ED%94%BC/search?query={recipe_data.title}"
+            )
+        )
+
+        level = ""
+        match recipe_data.level:
+            case "초급":
+                level = "⭐⭐⭐"
+            case "아무나":
+                level = "⭐⭐"
+            case "중급":
+                level = "⭐⭐⭐⭐"
+            case "고급":
+                level = "⭐⭐⭐⭐⭐"
+            case "":
+                level = "⭐"
+
+        self.recipe_info_modal.name_level_lbl.setText(f"{recipe_data.title} {level}")
+
+        self.recipe_info_modal.cooking_time_lbl.setText(recipe_data.cooking_time)
+        self.recipe_info_modal.origin_servings_lbl.setText(recipe_data.servings)
+
+        ingredients = recipe_data.ingredients.replace(" | ", "\n").replace("] ", "]\n")
+        self.recipe_info_modal.ingredient_lbl.setText(ingredients)
+
+        steps = recipe_data.steps.replace(" | ", "\n\n")
+        self.recipe_info_modal.step_txt_browser.setText(steps)
+
+        self.recipe_info_modal.show()
+
+    def change_servings_with_gemini(self, servings: int):
+        if not self.now_display_recipe:
+            print("현재 표시된 레시피가 없습니다.")
+            return
+
+        if not self.gemini_api_key:
+            QMessageBox.warning(
+                self.recipe_info_modal,
+                "경고",
+                "설정페이지에서 Gemini API 키를 설정해주세요.",
+            )
+            return
+
+        from api import google
+
+        res = google.change_cooking_setp(
+            self.now_display_recipe, self.gemini_api_key.value, servings
+        )
+        self.recipe_info_modal.step_txt_browser.setText(res)
+
+    def load_settings(self):
+        self.gemini_api_key = setting_db.Database.get_gemini_api_key()
+        print(f"Loaded Gemini API Key: {self.gemini_api_key}")
+        self.window.gemini_api_keyLineEdit.setText(self.gemini_api_key.value or "")
+
+        self.font_size = setting_db.Database.get_font_size()
+        if self.font_size is None:
+            print("Font size setting not found, using default value.")
+            return False
+        else:
+            print(f"Loaded font size: {self.font_size.value}")
+            self.window.font_size_cbx.setCurrentText(self.font_size.value)
+            return True
+
+    def save_settings(self):
+        gemini_api_key = self.window.gemini_api_keyLineEdit.text()
+        if not gemini_api_key.strip():
+            QMessageBox.warning(
+                self.window,
+                "경고",
+                "Gemini API 키를 입력해주세요.",
+            )
+            return
+
+        print(f"Saving settings: Gemini API Key = {gemini_api_key}")
+
+        if self.gemini_api_key is None:
+            setting_db.Database.create("gemini_api_key", gemini_api_key)
+        else:
+            setting = setting_db.Database.get_with_name("gemini_api_key")
+            if setting is not None:
+                setting.value = gemini_api_key
+                setting_db.Database.update(setting)
+
+        now_font_size = self.window.font_size_cbx.currentText()
+        print(f"Saving settings: Font size = {now_font_size}")
+        if self.font_size is None:
+            setting_db.Database.create("font_size", str(now_font_size))
+            print("Font size setting created.")
+        else:
+            setting = setting_db.Database.get_with_name("font_size")
+            if setting is not None:
+                setting.value = str(now_font_size)
+                setting_db.Database.update(setting)
+
+            print("Font size setting updated.")
+
+        QMessageBox.information(
+            self.window,
+            "설정 저장",
+            "설정이 저장되었습니다. 프로그램을 재시작해주세요.",
+        )

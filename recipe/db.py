@@ -59,3 +59,14 @@ class Database:
         """
         cursor.execute(sql, (limit,))
         return [Recipe(**row) for row in cursor.fetchall()]
+
+    @classmethod
+    def get_with_id(cls, recipe_id: int):
+        sql = """
+        SELECT * FROM RecipeInfo WHERE id = ?
+        """
+        cursor.execute(sql, (recipe_id,))
+        row = cursor.fetchone()
+        if row:
+            return Recipe(**row)
+        return None
