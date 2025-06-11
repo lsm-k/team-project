@@ -36,6 +36,7 @@ from cold_storage import db as cs_db
 from interface.interface_interaction import InterfaceInteraction, TabKind, RecipeTabKind
 from interface.ref_card import RefCard
 from interface.recipe_btn_box import RecipeBtnBox
+from interface.recommand_feed_box import RecommandFeedBox
 
 
 class OrderingType(Enum):
@@ -136,7 +137,7 @@ class Mainwindow:
 
         self.clear_ref_modal()
 
-        self.ref_get_all()
+        self.all_ref_card = self.ref_get_all()
 
         self.draw_all_ref_cards()
 
@@ -704,3 +705,39 @@ class Mainwindow:
 
         self.all_ref_cards = ref_cards
         self.draw_ref_cards(food_type=food_type)
+
+    def place_recommand_feed_boxes(self):
+        # recommand_feed_scrollarea(QScrollArea)에서 내부 위젯과 QGridLayout 찾기
+        scroll_area = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
+        if not scroll_area:
+            print("recommand_feed_scrollarea(QScrollArea)를 찾을 수 없습니다.")
+            return
+
+        content_widget = scroll_area.widget()
+        if not content_widget:
+            print("recommand_feed_scrollarea의 컨텐츠 위젯을 찾을 수 없습니다.")
+            return
+
+        grid_layout = content_widget.layout()
+        if not isinstance(grid_layout, QGridLayout):
+            print("recommand_feed_scrollarea의 QGridLayout을 찾을 수 없습니다.")
+            return
+
+        # 기존 위젯 모두 제거
+        while grid_layout.count():
+            item = grid_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        # 예시로 10개의 추천 박스 생성, 가로 3개씩 배치
+        for idx in range(20):
+            feed_box = RecommandFeedBox(
+                f"Title {idx+1}",
+                "D:/대학/team-project/interface/test_cat.jpg",
+                parent=content_widget
+            )
+            row = idx // 3  # 3개씩 한 행
+            col = idx % 3
+            grid_layout.addWidget(feed_box, row, col)
