@@ -70,9 +70,11 @@ class Mainwindow:
     add_ref_modal = None
     search_manage_ref_modal = None
     recipe_info_modal = None
+    add_favorite_recipe_group_modal = None
 
     # Status
     is_show_only_favorite = False
+    is_show_favorite_recipe = False
 
     ref_modal_type = RefModalType.ADD
     now_edit_ref_id = None
@@ -102,6 +104,7 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
+        self.add_favorite_recipe_group_modal = self.load_ui("add_favorite_recipe_group_modal")
 
         self.recipe_info_modal = self.load_ui("recipe_info_modal")
         self.recipe_info_modal.serving_1_btn.clicked.connect(
@@ -876,3 +879,37 @@ class Mainwindow:
             "설정 저장",
             "설정이 저장되었습니다. 프로그램을 재시작해주세요.",
         )
+
+    def toggle_favorite_recipe(self):
+        target_index = None
+
+        if self.is_show_favorite_recipe:
+            self.is_show_favorite_recipe = False
+            self.window.my_own_recip_btn.setText("📖")
+            target_index = 0
+        else:
+            self.is_show_favorite_recipe = True
+            self.window.my_own_recip_btn.setText("⮌")
+            target_index = 1
+
+        self.window.recip_main_widget.setCurrentIndex(target_index)
+
+    def show_add_favorite_recipe_group_modal(self):
+        button_bottom = self.window.ref_add_self_btn.mapToGlobal(
+            self.window.ref_add_self_btn.rect().bottomLeft()
+        )
+        combo_x = button_bottom.x() + 25
+        combo_y = button_bottom.y() + ((self.window.height() / 3) - 30)
+        self.add_favorite_recipe_group_modal.setGeometry(combo_x, combo_y, self.add_favorite_recipe_group_modal.width(), 25)
+
+        self.add_favorite_recipe_group_modal.show()
+
+    def close_add_favorite_recipe_group_modal(self):
+        self.add_favorite_recipe_group_modal.close()
+        self.add_favorite_recipe_group_modal.title_line_edit.clear()
+        self.add_favorite_recipe_group_modal.desc_line_edit.clear()
+
+    #TODO : 그룹 만드는 함수 여기에 연결하기
+    def ok_add_favorite_recipe_group_modal(self):
+        return
+
