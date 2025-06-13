@@ -1014,3 +1014,16 @@ class Mainwindow:
 
     def recipe_search_by_ingredients(self):
         self.place_recommand_feed_boxes(initial=True)
+
+    def reset_data(self):
+        result = QMessageBox.question(
+            self.window,
+            "데이터 초기화",
+            "모든 데이터가 초기화됩니다. 계속하시겠습니까?",
+        )
+        if result == QMessageBox.StandardButton.Yes:
+            cs_db.Database().reset()
+            recipe_db.Database().reset()
+            setting_db.Database().reset()
+
+            QMessageBox.information(self.window, "초기화 완료", "데이터가 초기화되었습니다.\n 프로그램을 다시 실행해주세요")

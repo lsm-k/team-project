@@ -20,6 +20,11 @@ class Ref:
 
 
 class Database:
+    def reset(self):
+        cursor.execute("DROP TABLE IF EXISTS Ref")
+        connection.commit()
+        self.setting_table()
+
     def setting_table(self):
         # 테이블 생성
         cursor.execute(

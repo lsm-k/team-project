@@ -182,3 +182,5 @@ class InterfaceInteraction:
         self.window.help_prev_btn.clicked.connect(self.prev_help_page)
 
         self.window.recommand_feed_setting_btn.clicked.connect(self.recipe_search_by_ingredients)
+
+        self.window.data_reset_btn.clicked.connect(self.reset_data)

@@ -25,6 +25,10 @@ class Recipe:
 
 
 class Database:
+    def reset(self):
+        cursor.execute("UPDATE RecipeInfo SET thumb_up = 0")
+        con.commit()
+
     @classmethod
     def setting_table():
         cursor.execute(

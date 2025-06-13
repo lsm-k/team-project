@@ -16,6 +16,11 @@ class Setting:
 
 
 class Database:
+    def reset(self):
+        cursor.execute("DROP TABLE IF EXISTS Setting")
+        con.commit()
+        self.setting_table()
+
     @classmethod
     def setting_table(cls):
         cursor.execute(
