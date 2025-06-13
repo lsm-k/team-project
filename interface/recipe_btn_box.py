@@ -5,9 +5,14 @@ from PySide6.QtCore import Qt, Signal
 class RecipeBtnBox(QFrame):
     checkedChanged = Signal(bool)
 
-    def __init__(self, checkbox_name, parent=None):
+    def __init__(
+        self, checkbox_name, parent=None, add_callback=None, remove_callback=None
+    ):
         super().__init__(parent)
         self.setObjectName("recipe_btn_box")
+        self.add_callback = add_callback
+        self.remove_callback = remove_callback
+        self.name = checkbox_name
         self.setStyleSheet(
             """
             QFrame#recipe_btn_box {
@@ -49,4 +54,9 @@ class RecipeBtnBox(QFrame):
         return cbox
 
     def change_checkbox_state(self, state):
-        self.checkedChanged.emit(state == Qt.Checked)
+        # Qt.CheckState로 변환하여 사용
+        check_state = Qt.CheckState(state)
+        if check_state == Qt.CheckState.Checked:
+            self.add_callback(self.name)
+        elif check_state == Qt.CheckState.Unchecked:
+            self.remove_callback(self.name)

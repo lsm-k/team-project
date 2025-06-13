@@ -97,6 +97,8 @@ class Mainwindow:
     recommand_feed_limit = 49
     recommand_feed_loading = False
 
+    recipe_search_ingredients = []
+
     help_img_viewer = None
     all_help_imgs = []
     now_help_img_index = 0
@@ -578,7 +580,11 @@ class Mainwindow:
 
         max_per_row = 6
         for idx, name in enumerate(names):
-            btn_box = RecipeBtnBox(name)
+            btn_box = RecipeBtnBox(
+                name,
+                add_callback=self.add_ingredient_to_recipe,
+                remove_callback=self.remove_ingredient_from_recipe,
+            )
             row = idx % 2
             col = idx // 2
             grid_layout.addWidget(btn_box, row, col)
@@ -771,9 +777,21 @@ class Mainwindow:
 
         self.recommand_feed_loading = True
 
-        recipe_slice = recipe_db.Database.get_with_offset(
-            self.recommand_feed_offset, self.recommand_feed_limit
-        )
+
+        recipe_slice  = None
+
+        title = self.window.recipe_search_box.text()
+        if title != "" or len(self.recipe_search_ingredients) > 0:
+            recipe_slice = recipe_db.Database.search_recipes(
+                title=title,
+                ingredients=self.recipe_search_ingredients,
+                offset=self.recommand_feed_offset,
+                limit=self.recommand_feed_limit
+            )
+        else:
+            recipe_slice = recipe_db.Database.get_with_offset(
+                self.recommand_feed_offset, self.recommand_feed_limit
+            )
 
         if not recipe_slice:
             self.recommand_feed_loading = False
@@ -965,3 +983,21 @@ class Mainwindow:
         if self.now_help_img_index > 0:
             self.now_help_img_index -= 1
             self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))
+    def add_ingredient_to_recipe(self, ingredient: str):
+        self.recipe_search_ingredients.append(ingredient)
+        print(f"{self.recipe_search_ingredients}")
+
+    def remove_ingredient_from_recipe(self, ingredient: str):
+        if ingredient in self.recipe_search_ingredients:
+            self.recipe_search_ingredients.remove(ingredient)
+        else:
+            print(f"Ingredient '{ingredient}' not found in recipe search ingredients.")
+
+        print(f"{self.recipe_search_ingredients}")
+
+    def recipe_search_by_ingredients(self):
+        # title = self.window.recipe_search_box.text()
+        # recipes = recipe_db.Database.search_recipes(title=title, ingredients=self.recipe_search_ingredients)
+        self.place_recommand_feed_boxes(initial=True)
+
+        print(f"{recipes}")

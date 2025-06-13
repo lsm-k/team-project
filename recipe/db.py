@@ -112,3 +112,26 @@ class Database:
         cursor.execute(sql, (thumbs_up, recipe_id))
         print(f"Recipe ID {recipe_id} thumbs up changed to {thumbs_up}")
         con.commit()
+
+    @classmethod
+    def search_recipes(cls, title: str = "", ingredients=None, offset: int = 0, limit: int = 20):
+        query = "SELECT * FROM RecipeInfo WHERE 1=1"
+        params = []
+        
+        if title:
+            query += " AND title LIKE ?"
+            params.append(f"%{title}%")
+        
+        for ingredient in (ingredients or []):
+            query += " AND ingredients LIKE ?"
+            params.append(f"%{ingredient} :%")
+        
+        query += " LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
+        
+        print(f"Executing query: {query} with params: {params}")
+        cursor.execute(query, params)
+        recipe_rows = cursor.fetchall()
+        if not recipe_rows:
+            return []
+        return [Recipe(**row) for row in recipe_rows]
