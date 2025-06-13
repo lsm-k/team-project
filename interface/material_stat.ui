@@ -2907,20 +2907,6 @@ QScrollBar::handle:horizontal{
              <number>6</number>
             </property>
             <item>
-             <widget class="QPushButton" name="data_backup_btn">
-              <property name="text">
-               <string>백업하기</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="data_import_btn">
-              <property name="text">
-               <string>가져오기</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="data_reset_btn">
               <property name="text">
                <string>초기화</string>
