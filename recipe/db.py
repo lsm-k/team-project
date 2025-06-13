@@ -10,6 +10,7 @@ cursor = con.cursor()
 
 @dataclass
 class Recipe:
+    uid: int = 0
     id: int = 0
     url: str = ""
     thumbnail_url: str = ""
@@ -20,6 +21,7 @@ class Recipe:
     level: str = ""
     ingredients: str = ""
     steps: str = ""
+    thumb_up: int = 0
 
 
 class Database:
@@ -41,7 +43,7 @@ class Database:
         )
         """
         )
-        connection.commit()
+        con.commit()
 
     @classmethod
     def get():
@@ -70,3 +72,19 @@ class Database:
         if row:
             return Recipe(**row)
         return None
+    
+    @classmethod
+    def get_all_recipe_ids(cls):
+        sql = """
+        SELECT id FROM RecipeInfo
+        """
+        cursor.execute(sql)
+        return [row[0] for row in cursor.fetchall()]
+
+    @classmethod
+    def get_with_offset(cls, offset: int, limit: int):
+        sql = """
+        SELECT * FROM RecipeInfo LIMIT ? OFFSET ?
+        """
+        cursor.execute(sql, (limit, offset))
+        return [Recipe(**row) for row in cursor.fetchall()]

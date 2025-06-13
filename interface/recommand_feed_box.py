@@ -22,6 +22,15 @@ class RecommandFeedBox(QFrame):
 
         self.recipe_id = recipe_id
         self.open_modal_callback = open_modal_callback
+        self.setStyleSheet("""
+                    QFrame#recommand_feed_box {
+                           border-color: rgb(0, 0, 0);
+                           border-width: 1px;
+                           border-style: solid;
+                           border-radus: 75px;
+                           background-color: rgb(255, 255, 255, 0);
+                           }
+                           """)
 
         self.setObjectName("recommand_feed_box")
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)

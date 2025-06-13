@@ -65,14 +65,12 @@ font_sizes = [9, 10, 12, 14]
 
 
 class Mainwindow:
-    # UIs
     window = None
     add_ref_modal = None
     search_manage_ref_modal = None
     recipe_info_modal = None
     add_favorite_recipe_group_modal = None
 
-    # Status
     is_show_only_favorite = False
     is_show_favorite_recipe = False
 
@@ -89,8 +87,14 @@ class Mainwindow:
     gemini_api_key = None
     font_size = None
 
-    # Datas
+    now_recipe_num = 0
+    limit_recipe_num = 48
+
     all_ref_cards = []
+
+    recommand_feed_offset = 0
+    recommand_feed_limit = 49
+    recommand_feed_loading = False
 
     def load_ui(self, file_name):
         ui_file = QFile(os.path.join(os.path.dirname(__file__), f"{file_name}.ui"))
@@ -135,10 +139,14 @@ class Mainwindow:
         )
         self.toggle_button_by_lineedit()
 
-        self.place_recommand_feed_boxes()
-
-        # font_sizes
         self.window.font_size_cbx.addItems([str(size) for size in font_sizes])
+
+        # 추천 피드 스크롤바 이벤트 연결
+        recommand_scrollarea = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
+        if recommand_scrollarea:
+            recommand_scrollarea.verticalScrollBar().valueChanged.connect(self.on_recommand_scrollbar_changed)
+        # 최초 1회 로딩
+        self.place_recommand_feed_boxes(initial=True)
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -161,7 +169,6 @@ class Mainwindow:
 
     def show(self):
         app = QApplication(sys.argv)
-
         self.setup_ui()
         self.window.setWindowTitle("냉장고를 부탁해")
         self.add_ref_modal.setWindowFlags(Qt.WindowType.FramelessWindowHint)
@@ -175,13 +182,9 @@ class Mainwindow:
 
         self.setup_combo_box()
         self.setup_sort_btn()
-
         self.clear_ref_modal()
-
         self.all_ref_card = self.ref_get_all()
-
         self.draw_all_ref_cards()
-
         self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
         self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
         self.add_recipe_btns_by_type(
@@ -202,7 +205,6 @@ class Mainwindow:
             app.setFont(app_font)
 
         self.window.show()
-
         sys.exit(app.exec())
 
     def show_add_ref_modal(self):
@@ -296,6 +298,10 @@ class Mainwindow:
         tab = self.window.findChild(QTabWidget, "tab_root")
         tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
         tab_2.setCurrentIndex(tab_kind.value)
+    
+    def change_tab_own_recipe(self, tab_kind):
+        tab = self.window.findChild(QStackedWidget, "recip_main_widget")
+        tab.setCurrentIndex(tab_kind.value)
 
     def create_ref(self):
         food_name = self.add_ref_modal.name_line_edit.text()
@@ -635,7 +641,6 @@ class Mainwindow:
                 self.draw_all_ref_cards()
                 print(f"Deleted ref with id: {ref_id}")
 
-                # ★ 육류 재료가 삭제되었을 때 버튼 갱신
                 self.add_recipe_btns_by_type(FoodType.MEAT, "recipe_btn_scrollArea")
                 self.add_recipe_btns_by_type(FoodType.SEA_FOOD, "fish_btn_scrollArea")
                 self.add_recipe_btns_by_type(
@@ -706,8 +711,15 @@ class Mainwindow:
         self.all_ref_cards = ref_cards
         self.draw_ref_cards(food_type=food_type)
 
-    def place_recommand_feed_boxes(self):
-        # recommand_feed_scrollarea(QScrollArea)에서 내부 위젯과 QGridLayout 찾기
+    def on_recommand_scrollbar_changed(self, value):
+        scroll_area = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
+        if not scroll_area:
+            return
+        scroll_bar = scroll_area.verticalScrollBar()
+        if value == scroll_bar.maximum() and not self.recommand_feed_loading:
+            self.place_recommand_feed_boxes(initial=False)
+
+    def place_recommand_feed_boxes(self, initial=False):
         scroll_area = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
         if not scroll_area:
             print("recommand_feed_scrollarea(QScrollArea)를 찾을 수 없습니다.")
@@ -723,48 +735,44 @@ class Mainwindow:
             print("recommand_feed_scrollarea의 QGridLayout을 찾을 수 없습니다.")
             return
 
-        # 기존 위젯 모두 제거
-        while grid_layout.count():
-            item = grid_layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.setParent(None)
-                widget.deleteLater()
+        if initial:
+            while grid_layout.count():
+                item = grid_layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                    widget.deleteLater()
+            self.recommand_feed_offset = 0
 
-        # 예시로 10개의 추천 박스 생성, 가로 3개씩 배치
-        recipe_ids = [
-            7052101,
-            7022775,
-            7033948,
-            7029097,
-            7035751,
-            7052101,
-            7022775,
-            7035751,
-            7018465,
-            7052101,
-            7022775,
-            7035751,
-            6984517,
-            7025833,
-            7009944,
-            6993517,
-            7003487,
-            7005830,
-        ]
+        self.recommand_feed_loading = True
 
-        for idx in recipe_ids:
-            feed_box = RecommandFeedBox(
-                recipe_id=idx,
-                title_label=f"Title {idx+1}",
-                tag_label=f"#Tag {idx+1}",
-                img="D:/대학/team-project/interface/test_cat.jpg",
-                parent=content_widget,
-                open_modal_callback=self.open_recipe_info_modal,
-            )
-            row = idx // 3  # 3개씩 한 행
-            col = idx % 3
-            grid_layout.addWidget(feed_box, row, col)
+        recipe_slice = recipe_db.Database.get_with_offset(
+            self.recommand_feed_offset, self.recommand_feed_limit
+        )
+
+        if not recipe_slice:
+            self.recommand_feed_loading = False
+            return
+
+        row_col_idx = grid_layout.count()
+        for recipe in recipe_slice:
+            recipe_id = recipe.id
+            print(f"recipe_id: {recipe_id}, img exists: {os.path.isfile(f'D:/대학/recipe_thumbnails/{recipe_id}.jpg')}")
+            if os.path.isfile(f"D:/대학/recipe_thumbnails/{recipe_id}.jpg"):
+                feed_box = RecommandFeedBox(
+                    recipe_id=recipe_id,
+                    title_label=recipe.title,
+                    img=f"D:/대학/recipe_thumbnails/{recipe_id}.jpg",
+                    parent=content_widget,
+                    open_modal_callback=self.open_recipe_info_modal,
+                )
+                row = row_col_idx // 3
+                col = row_col_idx % 3
+                grid_layout.addWidget(feed_box, row, col)
+                row_col_idx += 1
+
+        self.recommand_feed_offset += self.recommand_feed_limit
+        self.recommand_feed_loading = False
 
     def open_recipe_info_modal(self, recipe_id: int):
         recipe_data = recipe_db.Database.get_with_id(recipe_id)
@@ -830,7 +838,11 @@ class Mainwindow:
     def load_settings(self):
         self.gemini_api_key = setting_db.Database.get_gemini_api_key()
         print(f"Loaded Gemini API Key: {self.gemini_api_key}")
-        self.window.gemini_api_keyLineEdit.setText(self.gemini_api_key.value or "")
+
+        if self.gemini_api_key is not None:
+            self.window.gemini_api_keyLineEdit.setText(self.gemini_api_key.value or "")
+        else:
+            self.window.gemini_api_keyLineEdit.setText("")
 
         self.font_size = setting_db.Database.get_font_size()
         if self.font_size is None:
