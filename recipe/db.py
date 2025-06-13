@@ -84,7 +84,31 @@ class Database:
     @classmethod
     def get_with_offset(cls, offset: int, limit: int):
         sql = """
-        SELECT * FROM RecipeInfo LIMIT ? OFFSET ?
-        """
+                SELECT * FROM RecipeInfo
+                WHERE uid IN (
+                    SELECT MIN(uid) FROM RecipeInfo GROUP BY id
+                )
+                LIMIT ? OFFSET ?
+            """        
         cursor.execute(sql, (limit, offset))
         return [Recipe(**row) for row in cursor.fetchall()]
+
+    @classmethod
+    def get_thumbs_up(cls, recipe_id: int):
+        sql = """
+        SELECT thumb_up FROM RecipeInfo WHERE id = ?
+        """
+        cursor.execute(sql, (recipe_id,))
+        row = cursor.fetchone()
+        if row:
+            return row[0]
+        return 0
+    
+    @classmethod
+    def change_thumbs_up(cls, recipe_id: int, thumbs_up: int):
+        sql = """
+        UPDATE RecipeInfo SET thumb_up = ? WHERE id = ?
+        """
+        cursor.execute(sql, (thumbs_up, recipe_id))
+        print(f"Recipe ID {recipe_id} thumbs up changed to {thumbs_up}")
+        con.commit()

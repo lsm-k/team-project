@@ -8,6 +8,8 @@ from PySide6.QtWidgets import (
     QSizePolicy,
 )
 
+from recipe.db import Database as db
+
 
 class RecommandFeedBox(QFrame):
     def __init__(
@@ -34,9 +36,9 @@ class RecommandFeedBox(QFrame):
 
         self.setObjectName("recommand_feed_box")
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.setup_ui(title_label, img)
+        self.setup_ui(title_label, img, recipe_id)
 
-    def setup_ui(self, title_label, img):
+    def setup_ui(self, title_label, img, recipe_id):
         self.setFixedSize(150, 200)  # QFrame(자기 자신)에 크기 지정
         main_layout = QVBoxLayout(self)
         sub_v_layout = QVBoxLayout()
@@ -53,11 +55,15 @@ class RecommandFeedBox(QFrame):
         sub_v_layout.addWidget(self.set_label(title_label))
         sub_v_layout.addLayout(sub_sub_h_layout)
         sub_sub_h_layout.addWidget(
-            self.create_button("thumbs_up_btn", "👍", 24, 42, None)
+            thumbs_up_btn := self.create_button("thumbs_up_btn", "👍", 24, 42, None)
         )
         sub_sub_h_layout.addWidget(
-            self.create_button("thumbs_down_btn", "👎", 24, 42, None)
+            thumbs_down_btn := self.create_button("thumbs_down_btn", "👎", 24, 42, None)
         )
+        
+        thumbs_up_btn.clicked.connect(lambda: db.change_thumbs_up(recipe_id, 1))    # 1 = TRUE
+
+        thumbs_down_btn.clicked.connect(lambda: db.change_thumbs_up(recipe_id, 0))  # 0 = FALSE
 
     def create_button(self, name, text, size_hight, size_width, img):
         button = QPushButton(name)
