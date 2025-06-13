@@ -1013,8 +1013,4 @@ class Mainwindow:
         print(f"{self.recipe_search_ingredients}")
 
     def recipe_search_by_ingredients(self):
-        # title = self.window.recipe_search_box.text()
-        # recipes = recipe_db.Database.search_recipes(title=title, ingredients=self.recipe_search_ingredients)
         self.place_recommand_feed_boxes(initial=True)
-
-        print(f"{recipes}")
