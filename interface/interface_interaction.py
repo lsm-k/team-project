@@ -166,10 +166,16 @@ class InterfaceInteraction:
 
         self.window.my_own_recip_btn.clicked.connect(self.toggle_favorite_recipe)
 
-        self.window.open_favoirte_recipe_group_modal_btn.clicked.connect(self.show_add_favorite_recipe_group_modal)
+        self.window.open_favoirte_recipe_group_modal_btn.clicked.connect(
+            self.show_add_favorite_recipe_group_modal
+        )
 
-        self.add_favorite_recipe_group_modal.yes_or_no_btn.accepted.connect(self.ok_add_favorite_recipe_group_modal)
-        self.add_favorite_recipe_group_modal.yes_or_no_btn.rejected.connect(self.close_add_favorite_recipe_group_modal)
+        self.add_favorite_recipe_group_modal.yes_or_no_btn.accepted.connect(
+            self.ok_add_favorite_recipe_group_modal
+        )
+        self.add_favorite_recipe_group_modal.yes_or_no_btn.rejected.connect(
+            self.close_add_favorite_recipe_group_modal
+        )
 
         # help page navigation
         self.window.help_next_btn.clicked.connect(self.next_help_page)

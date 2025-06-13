@@ -72,7 +72,7 @@ class Database:
         if row:
             return Recipe(**row)
         return None
-    
+
     @classmethod
     def get_all_recipe_ids(cls):
         sql = """
@@ -89,7 +89,7 @@ class Database:
                     SELECT MIN(uid) FROM RecipeInfo GROUP BY id
                 )
                 LIMIT ? OFFSET ?
-            """        
+            """
         cursor.execute(sql, (limit, offset))
         return [Recipe(**row) for row in cursor.fetchall()]
 
@@ -103,7 +103,7 @@ class Database:
         if row:
             return row[0]
         return 0
-    
+
     @classmethod
     def change_thumbs_up(cls, recipe_id: int, thumbs_up: int):
         sql = """

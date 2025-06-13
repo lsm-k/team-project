@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
     QStackedWidget,
     QScrollArea,
     QHBoxLayout,
-    QLabel
+    QLabel,
 )
 from PySide6.QtCore import (
     QFile,
@@ -115,7 +115,9 @@ class Mainwindow:
         self.window = self.load_ui("material_stat")
         self.add_ref_modal = self.load_ui("add_ref_modal")
         self.search_manage_ref_modal = self.load_ui("search_manage_ref_modal")
-        self.add_favorite_recipe_group_modal = self.load_ui("add_favorite_recipe_group_modal")
+        self.add_favorite_recipe_group_modal = self.load_ui(
+            "add_favorite_recipe_group_modal"
+        )
 
         self.recipe_info_modal = self.load_ui("recipe_info_modal")
         self.recipe_info_modal.serving_1_btn.clicked.connect(
@@ -149,9 +151,13 @@ class Mainwindow:
         self.window.font_size_cbx.addItems([str(size) for size in font_sizes])
 
         # 추천 피드 스크롤바 이벤트 연결
-        recommand_scrollarea = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
+        recommand_scrollarea = self.window.findChild(
+            QScrollArea, "recommand_feed_scrollarea"
+        )
         if recommand_scrollarea:
-            recommand_scrollarea.verticalScrollBar().valueChanged.connect(self.on_recommand_scrollbar_changed)
+            recommand_scrollarea.verticalScrollBar().valueChanged.connect(
+                self.on_recommand_scrollbar_changed
+            )
         # 최초 1회 로딩
         self.place_recommand_feed_boxes(initial=True)
 
@@ -207,11 +213,15 @@ class Mainwindow:
         self.recipe_info_modal.setWindowIcon(main_icon)
 
         for i in range(0, 10):
-            img_path = os.path.join(os.path.dirname(__file__), f"help_imgs\\help_imgs_{i}.png")
+            img_path = os.path.join(
+                os.path.dirname(__file__), f"help_imgs\\help_imgs_{i}.png"
+            )
             self.all_help_imgs.append(img_path)
         help_layout = QVBoxLayout()
         self.help_img_viewer = QLabel()
-        self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))
+        self.help_img_viewer.setPixmap(
+            QPixmap(self.all_help_imgs[self.now_help_img_index])
+        )
         self.window.help_image_root.setLayout(help_layout)
         help_layout.addWidget(self.help_img_viewer)
 
@@ -325,7 +335,7 @@ class Mainwindow:
         tab = self.window.findChild(QTabWidget, "tab_root")
         tab_2 = tab.findChild(QTabWidget, "recip_search_box_tab")
         tab_2.setCurrentIndex(tab_kind.value)
-    
+
     def change_tab_own_recipe(self, tab_kind):
         tab = self.window.findChild(QStackedWidget, "recip_main_widget")
         tab.setCurrentIndex(tab_kind.value)
@@ -802,7 +812,7 @@ class Mainwindow:
             recipe_id = recipe.id
 
             img_root = os.path.join(os.path.dirname(__file__), f"recipe_thumbnails")
-            img=os.path.join(img_root, f"{recipe_id}.jpg").replace("\\", "/")
+            img = os.path.join(img_root, f"{recipe_id}.jpg").replace("\\", "/")
 
             print(f"Loading recipe {recipe_id} with image: {img}")
 
@@ -960,7 +970,9 @@ class Mainwindow:
         )
         combo_x = button_bottom.x() + 25
         combo_y = button_bottom.y() + ((self.window.height() / 3) - 30)
-        self.add_favorite_recipe_group_modal.setGeometry(combo_x, combo_y, self.add_favorite_recipe_group_modal.width(), 25)
+        self.add_favorite_recipe_group_modal.setGeometry(
+            combo_x, combo_y, self.add_favorite_recipe_group_modal.width(), 25
+        )
 
         self.add_favorite_recipe_group_modal.show()
 
@@ -969,7 +981,7 @@ class Mainwindow:
         self.add_favorite_recipe_group_modal.title_line_edit.clear()
         self.add_favorite_recipe_group_modal.desc_line_edit.clear()
 
-    #TODO : 그룹 만드는 함수 여기에 연결하기
+    # TODO : 그룹 만드는 함수 여기에 연결하기
     def ok_add_favorite_recipe_group_modal(self):
         return
 
@@ -977,12 +989,17 @@ class Mainwindow:
         last_index = len(self.all_help_imgs) - 1
         if self.now_help_img_index < last_index:
             self.now_help_img_index += 1
-            self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))
+            self.help_img_viewer.setPixmap(
+                QPixmap(self.all_help_imgs[self.now_help_img_index])
+            )
 
     def prev_help_page(self):
         if self.now_help_img_index > 0:
             self.now_help_img_index -= 1
-            self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))
+            self.help_img_viewer.setPixmap(
+                QPixmap(self.all_help_imgs[self.now_help_img_index])
+            )
+
     def add_ingredient_to_recipe(self, ingredient: str):
         self.recipe_search_ingredients.append(ingredient)
         print(f"{self.recipe_search_ingredients}")

@@ -24,7 +24,8 @@ class RecommandFeedBox(QFrame):
 
         self.recipe_id = recipe_id
         self.open_modal_callback = open_modal_callback
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
                     QFrame#recommand_feed_box {
                            border-color: rgb(0, 0, 0);
                            border-width: 1px;
@@ -32,7 +33,8 @@ class RecommandFeedBox(QFrame):
                            border-radus: 75px;
                            background-color: rgb(255, 255, 255, 0);
                            }
-                           """)
+                           """
+        )
 
         self.setObjectName("recommand_feed_box")
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -60,10 +62,14 @@ class RecommandFeedBox(QFrame):
         sub_sub_h_layout.addWidget(
             thumbs_down_btn := self.create_button("thumbs_down_btn", "👎", 24, 42, None)
         )
-        
-        thumbs_up_btn.clicked.connect(lambda: db.change_thumbs_up(recipe_id, 1))    # 1 = TRUE
 
-        thumbs_down_btn.clicked.connect(lambda: db.change_thumbs_up(recipe_id, 0))  # 0 = FALSE
+        thumbs_up_btn.clicked.connect(
+            lambda: db.change_thumbs_up(recipe_id, 1)
+        )  # 1 = TRUE
+
+        thumbs_down_btn.clicked.connect(
+            lambda: db.change_thumbs_up(recipe_id, 0)
+        )  # 0 = FALSE
 
     def create_button(self, name, text, size_hight, size_width, img):
         button = QPushButton(name)
