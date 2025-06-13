@@ -782,12 +782,17 @@ class Mainwindow:
         row_col_idx = grid_layout.count()
         for recipe in recipe_slice:
             recipe_id = recipe.id
-            print(f"recipe_id: {recipe_id}, img exists: {os.path.isfile(f'D:/대학/recipe_thumbnails/{recipe_id}.jpg')}")
-            if os.path.isfile(f"D:/대학/recipe_thumbnails/{recipe_id}.jpg"):
+
+            img_root = os.path.join(os.path.dirname(__file__), f"recipe_thumbnails")
+            img=os.path.join(img_root, f"{recipe_id}.jpg").replace("\\", "/")
+
+            print(f"Loading recipe {recipe_id} with image: {img}")
+
+            if os.path.isfile(img):
                 feed_box = RecommandFeedBox(
                     recipe_id=recipe_id,
                     title_label=recipe.title,
-                    img=f"D:/대학/recipe_thumbnails/{recipe_id}.jpg",
+                    img=img,
                     parent=content_widget,
                     open_modal_callback=self.open_recipe_info_modal,
                 )
