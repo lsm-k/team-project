@@ -2797,22 +2797,67 @@ QScrollBar::handle:horizontal{
          <attribute name="title">
           <string>도움말</string>
          </attribute>
-         <widget class="QLineEdit" name="lineEdit_3">
-          <property name="geometry">
-           <rect>
-            <x>130</x>
-            <y>110</y>
-            <width>113</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>ㅊㅊㅋㅊㅌ</string>
-          </property>
-          <property name="placeholderText">
-           <string>ㅁㅇㄴㅁㅇ</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_12" stretch="9,1">
+          <item>
+           <widget class="QScrollArea" name="wqwqd">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_5">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>511</width>
+               <height>679</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QFrame" name="help_image_root">
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <item>
+             <widget class="QPushButton" name="help_prev_btn">
+              <property name="text">
+               <string>이전</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="help_next_btn">
+              <property name="text">
+               <string>다음</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="setting_tab">
          <property name="layoutDirection">

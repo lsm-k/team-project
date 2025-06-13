@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QStackedWidget,
     QScrollArea,
     QHBoxLayout,
+    QLabel
 )
 from PySide6.QtCore import (
     QFile,
@@ -95,6 +96,10 @@ class Mainwindow:
     recommand_feed_offset = 0
     recommand_feed_limit = 49
     recommand_feed_loading = False
+
+    help_img_viewer = None
+    all_help_imgs = []
+    now_help_img_index = 0
 
     def load_ui(self, file_name):
         ui_file = QFile(os.path.join(os.path.dirname(__file__), f"{file_name}.ui"))
@@ -199,6 +204,15 @@ class Mainwindow:
         self.search_manage_ref_modal.setWindowIcon(main_icon)
         self.recipe_info_modal.setWindowIcon(main_icon)
 
+        for i in range(0, 10):
+            img_path = os.path.join(os.path.dirname(__file__), f"help_imgs\\help_imgs_{i}.png")
+            self.all_help_imgs.append(img_path)
+        help_layout = QVBoxLayout()
+        self.help_img_viewer = QLabel()
+        self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))
+        self.window.help_image_root.setLayout(help_layout)
+        help_layout.addWidget(self.help_img_viewer)
+
         if self.load_settings():
             app_font = app.font()
             app_font.setPointSize(int(self.font_size.value))
@@ -292,6 +306,17 @@ class Mainwindow:
 
     def change_tab(self, tab_widget, tab_kind):
         tab_widget.setCurrentIndex(tab_kind.value)
+
+        match tab_kind:
+            case TabKind.STORAGE_STATUS:
+                self.window.showNormal()
+            case TabKind.RECIPE:
+                self.window.showNormal()
+            case TabKind.SETTING:
+                self.window.showNormal()
+            case TabKind.HELP:
+                self.window.showMaximized()
+
         print(f"Changed tab to {tab_kind.value} ({tab_kind.name})")
 
     def change_tab_recipe(self, tab_kind):
@@ -925,3 +950,13 @@ class Mainwindow:
     def ok_add_favorite_recipe_group_modal(self):
         return
 
+    def next_help_page(self):
+        last_index = len(self.all_help_imgs) - 1
+        if self.now_help_img_index < last_index:
+            self.now_help_img_index += 1
+            self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))
+
+    def prev_help_page(self):
+        if self.now_help_img_index > 0:
+            self.now_help_img_index -= 1
+            self.help_img_viewer.setPixmap(QPixmap(self.all_help_imgs[self.now_help_img_index]))

@@ -170,3 +170,7 @@ class InterfaceInteraction:
 
         self.add_favorite_recipe_group_modal.yes_or_no_btn.accepted.connect(self.ok_add_favorite_recipe_group_modal)
         self.add_favorite_recipe_group_modal.yes_or_no_btn.rejected.connect(self.close_add_favorite_recipe_group_modal)
+
+        # help page navigation
+        self.window.help_next_btn.clicked.connect(self.next_help_page)
+        self.window.help_prev_btn.clicked.connect(self.prev_help_page)
