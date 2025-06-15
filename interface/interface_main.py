@@ -976,6 +976,7 @@ class Mainwindow:
         if self.is_show_favorite_recipe:
             self.is_show_favorite_recipe = False
             self.window.my_own_recip_btn.setText("📖")
+            self.place_recommand_feed_boxes(initial=True)
             target_index = 0
         else:
             self.is_show_favorite_recipe = True
