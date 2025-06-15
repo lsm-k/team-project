@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
 )
+
 from PySide6.QtCore import (
     QFile,
     Qt,
@@ -97,6 +98,10 @@ class Mainwindow:
     recommand_feed_limit = 49
     recommand_feed_loading = False
 
+    thumbsup_feed_offset = 0
+    thumbsup_feed_limit = 49
+    thumbsup_feed_loading = False
+
     recipe_search_ingredients = []
 
     help_img_viewer = None
@@ -154,12 +159,20 @@ class Mainwindow:
         recommand_scrollarea = self.window.findChild(
             QScrollArea, "recommand_feed_scrollarea"
         )
+        thumbsup_scrollarea = self.window.findChild(QScrollArea, "scrollArea")
+
         if recommand_scrollarea:
             recommand_scrollarea.verticalScrollBar().valueChanged.connect(
                 self.on_recommand_scrollbar_changed
             )
+        
+        if thumbsup_scrollarea:
+            thumbsup_scrollarea.verticalScrollBar().valueChanged.connect(
+                self.on_recommand_scrollbar_changed
+            )
         # 최초 1회 로딩
         self.place_recommand_feed_boxes(initial=True)
+        self.create_thumbsup_recipe(initial=True)
 
     def display_none_all_tabs(self):
         tab_cnt = self.window.tab_root.count()
@@ -754,11 +767,19 @@ class Mainwindow:
 
     def on_recommand_scrollbar_changed(self, value):
         scroll_area = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
+        scroll_area_2 = self.window.findChild(QScrollArea, "scrollArea_2")
         if not scroll_area:
             return
         scroll_bar = scroll_area.verticalScrollBar()
         if value == scroll_bar.maximum() and not self.recommand_feed_loading:
             self.place_recommand_feed_boxes(initial=False)
+
+        thumbsup_scrollarea = self.window.findChild(QScrollArea, "scrollArea")
+        if not thumbsup_scrollarea:
+            return
+        thumbsup_scrollbar = thumbsup_scrollarea.verticalScrollBar()
+        if value == thumbsup_scrollbar.maximum() and not self.thumbsup_feed_loading:
+            self.create_thumbsup_recipe(initial=False)
 
     def place_recommand_feed_boxes(self, initial=False):
         scroll_area = self.window.findChild(QScrollArea, "recommand_feed_scrollarea")
@@ -787,7 +808,6 @@ class Mainwindow:
 
         self.recommand_feed_loading = True
 
-
         recipe_slice  = None
 
         title = self.window.recipe_search_box.text()
@@ -814,21 +834,20 @@ class Mainwindow:
             img_root = os.path.join(os.path.dirname(__file__), f"recipe_thumbnails")
             img = os.path.join(img_root, f"{recipe_id}.jpg").replace("\\", "/")
 
-            print(f"Loading recipe {recipe_id} with image: {img}")
+            # print(f"Loading recipe {recipe_id} with image: {img}")
 
             if os.path.isfile(img):
                 feed_box = RecommandFeedBox(
                     recipe_id=recipe_id,
                     title_label=recipe.title,
                     img=img,
-                    parent=content_widget,
+                    parent=None,
                     open_modal_callback=self.open_recipe_info_modal,
                 )
                 row = row_col_idx // 3
                 col = row_col_idx % 3
                 grid_layout.addWidget(feed_box, row, col)
                 row_col_idx += 1
-
         self.recommand_feed_offset += self.recommand_feed_limit
         self.recommand_feed_loading = False
 
@@ -1014,6 +1033,7 @@ class Mainwindow:
 
     def recipe_search_by_ingredients(self):
         self.place_recommand_feed_boxes(initial=True)
+        self.create_thumbsup_recipe(initial=True)
 
     def reset_data(self):
         result = QMessageBox.question(
@@ -1027,3 +1047,78 @@ class Mainwindow:
             setting_db.Database().reset()
 
             QMessageBox.information(self.window, "초기화 완료", "데이터가 초기화되었습니다.\n 프로그램을 다시 실행해주세요")
+
+    def create_thumbsup_recipe(self, initial=False):
+        print("create_thumbsup_recipe called")
+        scroll_area = self.window.findChild(QScrollArea, "scrollArea")
+        if not scroll_area:
+            print("scrollArea(QScrollArea)를 찾을 수 없습니다.")
+            return
+
+        content_widget = scroll_area.widget()
+        if not content_widget:
+            print("scrollArea의 컨텐츠 위젯을 찾을 수 없습니다.")
+            return
+
+        grid_layout = content_widget.layout()
+        if not isinstance(grid_layout, QGridLayout):
+            print("scrollArea의 QGridLayout을 찾을 수 없습니다.")
+            return
+
+        print("content_widget:", content_widget)
+        print("grid_layout:", grid_layout)
+
+        if initial:
+            while grid_layout.count():
+                item = grid_layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                    widget.deleteLater()
+            self.thumbsup_feed_offset = 0
+
+        self.thumbsup_feed_loading = True
+
+        recipe_slice  = None
+
+        title = self.window.recipe_search_box.text()
+        if title != "" or len(self.recipe_search_ingredients) > 0:
+            recipe_slice = recipe_db.Database.search_recipes(
+                title=title,
+                ingredients=self.recipe_search_ingredients,
+                offset=self.thumbsup_feed_offset,
+                limit=self.thumbsup_feed_limit,
+                only_thumbs_up=True
+            )
+        else:
+            recipe_slice = recipe_db.Database.get_recipe_by_thumbs_up(
+                self.thumbsup_feed_limit, self.thumbsup_feed_offset
+            )
+
+        if not recipe_slice:
+            self.thumbsup_feed_loading = False
+            return
+
+        row_col_idx = grid_layout.count()
+        for recipe in recipe_slice:
+            recipe_id = recipe.id
+
+            img_root = os.path.join(os.path.dirname(__file__), f"recipe_thumbnails")
+            img = os.path.join(img_root, f"{recipe_id}.jpg").replace("\\", "/")
+
+            print(f"Loading recipe {recipe_id} with image: {img} in thumbs up feed")
+
+            if os.path.isfile(img):
+                feed_box = RecommandFeedBox(
+                    recipe_id=recipe_id,
+                    title_label=recipe.title,
+                    img=img,
+                    parent=None,
+                    open_modal_callback=self.open_recipe_info_modal,
+                )
+                row = row_col_idx // 3
+                col = row_col_idx % 3
+                grid_layout.addWidget(feed_box, row, col)
+                row_col_idx += 1
+        self.thumbsup_feed_offset += self.thumbsup_feed_limit
+        self.thumbsup_feed_loading = False

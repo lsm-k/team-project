@@ -41,7 +41,7 @@ class RecommandFeedBox(QFrame):
         self.setup_ui(title_label, img, recipe_id)
 
     def setup_ui(self, title_label, img, recipe_id):
-        self.setFixedSize(150, 200)  # QFrame(자기 자신)에 크기 지정
+        self.setFixedSize(150, 200)
         main_layout = QVBoxLayout(self)
         sub_v_layout = QVBoxLayout()
         sub_sub_h_layout = QHBoxLayout()
@@ -53,23 +53,25 @@ class RecommandFeedBox(QFrame):
         img_btn = self.create_button("img_btn", " ", 120, 150, img)
         img_btn.clicked.connect(lambda: self.open_modal_callback(self.recipe_id))
         main_layout.addWidget(img_btn)
-        main_layout.addLayout(sub_v_layout)  # ← 여기만 addLayout으로 변경!
+        main_layout.addLayout(sub_v_layout)
         sub_v_layout.addWidget(self.set_label(title_label))
         sub_v_layout.addLayout(sub_sub_h_layout)
-        sub_sub_h_layout.addWidget(
-            thumbs_up_btn := self.create_button("thumbs_up_btn", "👍", 24, 42, None)
-        )
-        sub_sub_h_layout.addWidget(
-            thumbs_down_btn := self.create_button("thumbs_down_btn", "👎", 24, 42, None)
-        )
+        thumbs_up_btn = self.create_button("thumbs_up_btn", "👍", 24, 42, None)
+        thumbs_down_btn = self.create_button("thumbs_down_btn", "👎", 24, 42, None)
+        sub_sub_h_layout.addWidget(thumbs_up_btn)
+        sub_sub_h_layout.addWidget(thumbs_down_btn)
 
+        # 최초 스타일 적용
+        self.refresh_thumbs_style(thumbs_up_btn, recipe_id)
+
+        # 버튼 클릭 시 DB 변경 + 스타일 새로고침
+        from recipe.db import Database as db
         thumbs_up_btn.clicked.connect(
-            lambda: db.change_thumbs_up(recipe_id, 1)
-        )  # 1 = TRUE
-
+            lambda: (db.change_thumbs_up(recipe_id, 1), self.refresh_thumbs_style(thumbs_up_btn, recipe_id))
+        )
         thumbs_down_btn.clicked.connect(
-            lambda: db.change_thumbs_up(recipe_id, 0)
-        )  # 0 = FALSE
+            lambda: (db.change_thumbs_up(recipe_id, 0), self.refresh_thumbs_style(thumbs_up_btn, recipe_id))
+        )
 
     def create_button(self, name, text, size_hight, size_width, img):
         button = QPushButton(name)
@@ -96,3 +98,11 @@ class RecommandFeedBox(QFrame):
         if self.open_modal_callback:
             print(f"Opening modal for recipe ID: {recipe_id}")
             self.open_modal_callback(recipe_id)
+
+    def refresh_thumbs_style(self, thumbs_up_btn, recipe_id):
+        from recipe.db import Database as db
+        recipe = db.get_with_id(recipe_id)
+        if recipe and getattr(recipe, "thumb_up", 0) == 1:
+            thumbs_up_btn.setStyleSheet("background-color: #3b82f6; color: white;")
+        else:
+            thumbs_up_btn.setStyleSheet("")

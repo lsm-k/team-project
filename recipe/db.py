@@ -98,17 +98,6 @@ class Database:
         return [Recipe(**row) for row in cursor.fetchall()]
 
     @classmethod
-    def get_thumbs_up(cls, recipe_id: int):
-        sql = """
-        SELECT thumb_up FROM RecipeInfo WHERE id = ?
-        """
-        cursor.execute(sql, (recipe_id,))
-        row = cursor.fetchone()
-        if row:
-            return row[0]
-        return 0
-
-    @classmethod
     def change_thumbs_up(cls, recipe_id: int, thumbs_up: int):
         sql = """
         UPDATE RecipeInfo SET thumb_up = ? WHERE id = ?
@@ -118,7 +107,7 @@ class Database:
         con.commit()
 
     @classmethod
-    def search_recipes(cls, title: str = "", ingredients=None, offset: int = 0, limit: int = 20):
+    def search_recipes(cls, title: str = "", ingredients=None, offset: int = 0, limit: int = 20, only_thumbs_up: bool = False):
         query = "SELECT * FROM RecipeInfo WHERE 1=1"
         params = []
         
@@ -129,7 +118,10 @@ class Database:
         for ingredient in (ingredients or []):
             query += " AND ingredients LIKE ?"
             params.append(f"%{ingredient} :%")
-        
+
+        if only_thumbs_up:
+            query += " AND thumb_up = 1"
+
         query += " LIMIT ? OFFSET ?"
         params.extend([limit, offset])
         
@@ -139,3 +131,16 @@ class Database:
         if not recipe_rows:
             return []
         return [Recipe(**row) for row in recipe_rows]
+    
+    @classmethod
+    def get_recipe_by_thumbs_up(cls, limit: int, offset: int):
+        sql = """
+                SELECT * FROM RecipeInfo
+                WHERE thumb_up = 1
+                  AND uid IN (
+                    SELECT MIN(uid) FROM RecipeInfo WHERE thumb_up = 1 GROUP BY id
+                )
+                LIMIT ? OFFSET ?
+            """
+        cursor.execute(sql, (limit, offset))
+        return [Recipe(**row) for row in cursor.fetchall()]
