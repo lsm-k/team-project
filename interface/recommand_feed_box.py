@@ -19,11 +19,13 @@ class RecommandFeedBox(QFrame):
         img,
         parent=None,
         open_modal_callback=None,
+        refresh_callback=None,
     ):
         super().__init__(parent)
 
         self.recipe_id = recipe_id
         self.open_modal_callback = open_modal_callback
+        self.refresh_callback = refresh_callback
         self.setStyleSheet(
             """
                     QFrame#recommand_feed_box {
@@ -67,10 +69,10 @@ class RecommandFeedBox(QFrame):
         # 버튼 클릭 시 DB 변경 + 스타일 새로고침
         from recipe.db import Database as db
         thumbs_up_btn.clicked.connect(
-            lambda: (db.change_thumbs_up(recipe_id, 1), self.refresh_thumbs_style(thumbs_up_btn, recipe_id))
+            lambda: (db.change_thumbs_up(recipe_id, 1), self.refresh_thumbs_style(thumbs_up_btn, recipe_id), self.refresh_list())
         )
         thumbs_down_btn.clicked.connect(
-            lambda: (db.change_thumbs_up(recipe_id, 0), self.refresh_thumbs_style(thumbs_up_btn, recipe_id))
+            lambda: (db.change_thumbs_up(recipe_id, 0), self.refresh_thumbs_style(thumbs_up_btn, recipe_id), self.refresh_list())
         )
 
     def create_button(self, name, text, size_hight, size_width, img):
@@ -106,3 +108,6 @@ class RecommandFeedBox(QFrame):
             thumbs_up_btn.setStyleSheet("background-color: #3b82f6; color: white;")
         else:
             thumbs_up_btn.setStyleSheet("")
+
+    def refresh_list(self):
+        self.refresh_callback(initial=True)

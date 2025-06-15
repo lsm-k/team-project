@@ -843,6 +843,7 @@ class Mainwindow:
                     img=img,
                     parent=None,
                     open_modal_callback=self.open_recipe_info_modal,
+                    refresh_callback=self.create_thumbsup_recipe,
                 )
                 row = row_col_idx // 3
                 col = row_col_idx % 3
@@ -1115,6 +1116,7 @@ class Mainwindow:
                     img=img,
                     parent=None,
                     open_modal_callback=self.open_recipe_info_modal,
+                    refresh_callback=self.create_thumbsup_recipe,
                 )
                 row = row_col_idx // 3
                 col = row_col_idx % 3
